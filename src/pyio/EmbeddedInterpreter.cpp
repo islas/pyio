@@ -2,7 +2,8 @@
 #include "EmbeddedInterpreter.hpp"
 
 #include <vector>
-#include <stirng>
+#include <string>
+#include <list>
 
 #include "pybind11/pybind11.h"
 
@@ -15,7 +16,8 @@ EmbeddedInterpreter::PY_MAIN_METHOD         = "main"
 ////////////////////////////////////////////////////////////////////////////////
 EmbeddedInterpreter::EmbeddedInterpreter()
 {
-
+  // Set the ptr
+  pGuard_.reset( new pybind11::scoped_interpreter() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -23,7 +25,8 @@ EmbeddedInterpreter::EmbeddedInterpreter()
 ////////////////////////////////////////////////////////////////////////////////
 EmbeddedInterpreter::~EmbeddedInterpreter()
 {
-
+  // Dump the ptr
+  pGuard_.reset();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -32,12 +35,13 @@ EmbeddedInterpreter::~EmbeddedInterpreter()
 void
 EmbeddedInterpreter::initialize()
 {
-  // Set the ptr
-  pGuard_.reset( new pybind11::scoped_interpreter() );
 
   // Import sys
   sys_ = pybind11::module_::import( "sys" );
   sysPathAppend_ = sys.attr( "path" ).attr( "append" );
+
+  // Generate embedded modules
+  createBaseEmbeddedModules();
 
 }
 
@@ -53,8 +57,6 @@ EmbeddedInterpreter::finalize()
     pymodules_.clear();
   }
 
-  // Dump the ptr
-  pGuard_.reset();
 }
 
 
@@ -117,10 +119,98 @@ EmbeddedInterpreter::pymoduleCall( std::string pymodule )
 
 
 
+////////////////////////////////////////////////////////////////////////////////
+/// \brief "Creates" imports of the base modules provided
+////////////////////////////////////////////////////////////////////////////////
+void
+EmbeddedInterpreter::createBaseEmbeddedModules( )
+{
+  // No good way of gathering list of all embdedded modules dynamically
+  // so we "just have to know" somehow
+
+  std::list< std::string > modulesToLoad { 
+                                            "static_data",
+                                            "runtime_data",
+                                            "helper",
+#ifdef SOME_FEATURE
+                                            "feature_mod",
+#endif
+                                          };
+
+  for ( std::string &module : modulesToLoad )
+  {
+    pymodulesEmbedded_[ module ] = pybind11::module_::import( module );
+  }
+}
 
 
+////////////////////////////////////////////////////////////////////////////////
+/// \brief Builds into a module a float ptr to use
+////////////////////////////////////////////////////////////////////////////////
+void
+EmbeddedInterpreter::embedFloatPtr( std::string pymodule, std::string attr, float *ptr, size_t numDims, size_t *pDimSize )
+{
+
+  // Get embedded module
+  pybind11::module_ mod = pymodulesEmbedded_[ std::string( pymodule ) ];
+
+  
+  // Add attribute to it
+  // mod.def(
+  //         "value_ptr",
+  //         // Lambda
+  //         [](mat4& m) {
+  //                       pybind11::str dummyDataOwner;
+  //                       return pybind11::array_t< float >( 
+  //                           pybind11::buffer_info(
+  //                             ptr,                                                         // pointer to memory buffer
+  //                             sizeof( ptr[0] )                                             // size of underlying scalar type
+  //                             pybind11::format_descriptor< decltype( ptr[0] ) >::format(), // python struct-style format descriptor
+  //                             numDims,                                                     // number of dimensions
+  //                             { dims },                                                    // buffer dimensions
+  //                             { striding }                                                 // strides (in bytes) for each index
+  //                           )
+  //         pybind11::return_value_policy::reference
+  //         )
+
+  mod.def(
+          std::string( cstr ),
+          // Lambda
+          []() {
+                // Create a Python object that will free the allocated
+                // memory when destroyed:
+                pybind11::capsule dummyDataOwner( foo, []( void *f )
+                                                  {
+                                                    float *foo = reinterpret_cast<float *>( f );
+                                                    std::cerr << "Element [0] = " << foo[0] << "\n";
+                                                    std::cerr << "!!!freeing memory @ " << f << "\n";
+                                                    // delete[] foo; do nothing
+                                                  }
+                                                );
+                return pybind11::array_t< decltype( ptr[0] ), pybind11::array::f_style | pybind11::array::forcecast >(
+                          std::vector< decltype( ptr[0] ) >( pDimSize, pDimSize + numDims ), // shape
+                          ptr,
+                          dummyDataOwner
+                        )
+          },
+          pybind11::return_value_policy::reference
+          )
 
 
+//   // C API Buffer protocol
+//   .def_buffer([](Matrix &m) -> py::array_info {
+//     return py::array_info(
+//         m.data(),                                /* Pointer to buffer */
+//         sizeof(Scalar),                          /* Size of one scalar */
+//         py::format_descriptor<Scalar>::format(), /* Python struct-style format descriptor */
+//         2,                                       /* Number of dimensions */
+//         { m.rows(), m.cols() },                  /* Buffer dimensions */
+//         { sizeof(Scalar) * (rowMajor ? m.cols() : 1),
+//           sizeof(Scalar) * (rowMajor ? 1 : m.rows()) }
+//                                                  /* Strides (in bytes) for each index */
+//     );
+//  })
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -172,9 +262,9 @@ EmbeddedInterpreter_finalize  ( EmbeddedInterpreter *this )
 /// \brief C binding for addToScope
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_addToScope( EmbeddedInterpreter *this, char *cstr )
+EmbeddedInterpreter_addToScope( EmbeddedInterpreter *this, char *directory )
 {
-  this->addToScope( std::string( str ) );
+  this->addToScope( std::string( directory ) );
 }
 
 
@@ -182,34 +272,43 @@ EmbeddedInterpreter_addToScope( EmbeddedInterpreter *this, char *cstr )
 /// \brief C binding for pymoduleLoad
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_pymoduleLoad( EmbeddedInterpreter *this, char *cstr )
+EmbeddedInterpreter_pymoduleLoad( EmbeddedInterpreter *this, char *pymodule )
 {
-  this->pymoduleLoad( std::string( str ) );
+  this->pymoduleLoad( std::string( pymodule ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief C binding for pymoduleInitialize
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_pymoduleInitialize( EmbeddedInterpreter *this, char *cstr )
+EmbeddedInterpreter_pymoduleInitialize( EmbeddedInterpreter *this, char *pymodule )
 {
-  this->pymoduleInitialize( std::string( str ) );
+  this->pymoduleInitialize( std::string( pymodule ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief C binding for pymoduleFinalize
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_pymoduleFinalize( EmbeddedInterpreter *this, char *cstr )
+EmbeddedInterpreter_pymoduleFinalize( EmbeddedInterpreter *this, char *pymodule )
 {
-  this->pymoduleFinalize( std::string( str ) );
+  this->pymoduleFinalize( std::string( pymodule ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief C binding for pymoduleCall
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_pymoduleCall( EmbeddedInterpreter *this, char *cstr )
+EmbeddedInterpreter_pymoduleCall( EmbeddedInterpreter *this, char *pymodule )
 {
-  this->pymoduleCall( std::string( str ) );
+  this->pymoduleCall( std::string( pymodule ) );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/// \brief C binding for embedFloatPtr
+////////////////////////////////////////////////////////////////////////////////
+void
+EmbeddedInterpreter_embedFloatPtr( EmbeddedInterpreter *this, char *pymodule, char *attr, float *ptr, size_t numDims, size_t *pDimSize )
+{
+  this->embedFloatPtr( std::string( pymodule ), std::string( attr ), ptr, numDims, pDimSize );
 }
