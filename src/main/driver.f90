@@ -19,7 +19,7 @@ program driver
   
   
   ! Add embedded values
-  call EmbeddedInterpreter_embedFloatPtr( interpreter, f_c_string( "static_data" ), f_c_string( "arr" ), arr, numDims, dims )
+  call EmbeddedInterpreter_embedFloatPtr( interpreter, f_c_string( "runtime_data" ), f_c_string( "arr" ), arr, numDims, dims )
   
   ! Use user module
   call EmbeddedInterpreter_pymoduleLoad( interpreter,  f_c_string( "interp.euler" ) )
@@ -35,5 +35,9 @@ program driver
 
   ! delete
   call EmbeddedInterpreter_dtor( interpreter )
+
+  write( *, * ) "From Fortran : "
+  ! See what happened
+  write( *, * ) arr
   
 end program driver
