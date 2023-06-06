@@ -42,7 +42,7 @@ private:
   static const std::string PY_FINALIZE_METHOD;
   static const std::string PY_MAIN_METHOD;
 
-  std::unique_ptr< pybind11::scoped_interpreter >        upGuard_;            ///< Directly maintain the lifetime of this guard within this scope
+  pybind11::scoped_interpreter        guard_;            ///< Directly maintain the lifetime of this guard within this scope
   std::vector< std::string >                             userDirectories_;   ///< User supplied locations for user python modules
   std::unordered_map< std::string, pybind11::module_ >   pymodules_;         ///< Map of pymodules loaded ready to be called
   std::unordered_map< std::string, pybind11::module_ >   pymodulesEmbedded_; ///< Map of embedded pymodules available to python
