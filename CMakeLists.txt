@@ -1,6 +1,9 @@
 cmake_minimum_required( VERSION 3.16 )
 
 enable_language( C CXX Fortran )
+set( CMAKE_CXX_STANDARD 11 )
+# Use link paths as rpaths 
+set( CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE )
 
 option( USE_MPI    OFF )
 option( USE_OPENMP OFF )
@@ -43,6 +46,12 @@ target_include_directories( ${PROJECT_TARGET}
                             PRIVATE
                               ${PYBIND11_DIR}/include
                             )
+
+set_target_properties(
+                      ${PROJECT_TARGET}
+                      PROPERTIES
+                        LINKER_LANGUAGE Fortran
+                        )
 
 install(
         TARGETS ${PROJECT_TARGET}
