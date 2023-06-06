@@ -1,6 +1,6 @@
 import os
 import numpy
-import static_data
+import runtime_data
 import demo 
 
 filename = ""
@@ -15,8 +15,15 @@ def finalize( ) :
 def main( ) :
   print( logstr.format( file=filename, func=main.__name__ ) )
   print( "Hello Fortran!" )
-  print( static_data )
-  print( demo )
-  print( demo.__dict__ )
+
+  print( type( runtime_data.arr() ) )
+  print( runtime_data.arr().flags )
+
   print( demo.demoData() )
-  print( static_data.arr() )
+  print( runtime_data.arr() )
+
+  runtime_data.arr()[5] = 999
+
+  print( runtime_data.arr() )
+  
+

@@ -163,77 +163,22 @@ EmbeddedInterpreter::embedFloatPtr( std::string pymodule, std::string attr, floa
 
   // We are okay to make copies of these since they should be "small"
   pybind11::array::ShapeContainer dims = pybind11::array::ShapeContainer( std::vector< ssize_t >( pDimSize, pDimSize + numDims ) );
+  pybind11::str dummyDataOwner;
 
   // Add attribute to it
   mod.def(
           attr.c_str(),
           // // Lambda
-          [&]() {
+          [=]() {
                 return 
                   pybind11::array_t< std::remove_reference< decltype( ptr[0] ) >::type, pybind11::array::f_style | pybind11::array::forcecast >( 
                     dims,  // buffer dimensions
-                    static_cast< const std::remove_reference< decltype( ptr[0] ) >::type * >( ptr )
+                    static_cast< const std::remove_reference< decltype( ptr[0] ) >::type * >( ptr ),
+                    dummyDataOwner
                     );
-          }
-          // pybind11::buffer_info(
-          //             ptr,                                                         // pointer to memory buffer
-          //             sizeof( ptr[0] )                                             // size of underlying scalar type
-          //             pybind11::format_descriptor< decltype( ptr[0] ) >::format(), // python struct-style format descriptor
-          //             numDims,                                                     // number of dimensions
-          //             std::vector< decltype( ptr[0] ) >( pDimSize, pDimSize + numDims ) // buffer dimensions
-          //             // ,{ striding }                                                 // strides (in bytes) for each index
-          //           )
-          // pybind11::array_t< float >( 
-          //           pybind11::buffer_info(
-          //             ptr,                                                         // pointer to memory buffer
-          //             sizeof( ptr[0] )                                             // size of underlying scalar type
-          //             pybind11::format_descriptor< decltype( ptr[0] ) >::format(), // python struct-style format descriptor
-          //             numDims,                                                     // number of dimensions
-          //             td::vector< decltype( ptr[0] ) >( pDimSize, pDimSize + numDims ) // buffer dimensions
-          //             // ,{ striding }                                                 // strides (in bytes) for each index
-          //           )
-          // pybind11::return_value_policy::reference
+          },
+          pybind11::return_value_policy::automatic_reference
           );
-
-  // mod.def(
-  //         attr,
-  //         // Lambda
-  //         []() {
-  //               // Create a Python object that will free the allocated
-  //               // memory when destroyed:
-  //               // pybind11::capsule dummyDataOwner( ptr, []( void *f )
-  //               //                                   {
-  //               //                                     float *tmp = reinterpret_cast<float *>( f );
-  //               //                                     std::cout << "Element [0] = " << tmp[0] << "\n";
-  //               //                                     std::cout << "!!!freeing memory @ " << f << "\n";
-  //               //                                     // delete[] foo; do nothing
-  //               //                                   }
-  //               //                                 );
-  //               pybind11::str dummy;
-  //               return pybind11::array_t< decltype( ptr[0] ), pybind11::array::f_style | pybind11::array::forcecast >(
-  //                         std::vector< decltype( ptr[0] ) >( pDimSize, pDimSize + numDims ), // shape
-  //                         ptr,
-  //                         dummy
-  //                       )
-  //         }
-  //         // ,
-  //         // pybind11::return_value_policy::automatic_reference
-  //         )
-
-
-//   // C API Buffer protocol
-//   .def_buffer([](Matrix &m) -> py::array_info {
-//     return py::array_info(
-//         m.data(),                                /* Pointer to buffer */
-//         sizeof(Scalar),                          /* Size of one scalar */
-//         py::format_descriptor<Scalar>::format(), /* Python struct-style format descriptor */
-//         2,                                       /* Number of dimensions */
-//         { m.rows(), m.cols() },                  /* Buffer dimensions */
-//         { sizeof(Scalar) * (rowMajor ? m.cols() : 1),
-//           sizeof(Scalar) * (rowMajor ? 1 : m.rows()) }
-//                                                  /* Strides (in bytes) for each index */
-//     );
-//  })
 }
 
 
@@ -267,7 +212,7 @@ void
 EmbeddedInterpreter_dtor( EmbeddedInterpreter **ppObj )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  "Deleting " << static_cast< void * >( ppObj ) << std::endl;
+  std::cout << __func__ << ": " <<  "Deleting " << static_cast< void * >( *ppObj ) << std::endl;
 #endif
   delete (*ppObj);
   (*ppObj) = 0;
