@@ -1,5 +1,8 @@
 ! https://fortran-lang.discourse.group/t/best-practices-for-passing-c-strings/104/15
-module f_c_string
+module f_c_helpers
+
+  contains
+
   function f_c_string( string, asis )
     use, intrinsic :: iso_c_binding, only: c_char,c_null_char
 
@@ -19,4 +22,4 @@ module f_c_string
     end if
 
   end function
-end module f_c_string
+end module f_c_helpers
