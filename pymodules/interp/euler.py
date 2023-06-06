@@ -1,4 +1,8 @@
 import os
+import numpy
+import static_data
+import demo 
+
 filename = ""
 logstr   = "{file}:{func} : "
 def initialize( ) :
@@ -10,4 +14,9 @@ def finalize( ) :
 
 def main( ) :
   print( logstr.format( file=filename, func=main.__name__ ) )
-  print( static_data.attr() )
+  print( "Hello Fortran!" )
+  print( static_data )
+  print( demo )
+  print( demo.__dict__ )
+  print( demo.demoData() )
+  print( static_data.arr() )
