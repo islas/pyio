@@ -5,8 +5,11 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <map>
 
 #include "pybind11/pybind11.h"
+#include "pybind11/embed.h"
+
 
 class EmbeddedInterpreter
 {
@@ -29,7 +32,7 @@ public:
 
 
   // Building python-accesible modules
-  void embedFloatPtr( std::string pymodule, std::string attr, float *ptr, size_t numDims, size_t *pDimSize )
+  void embedFloatPtr( std::string pymodule, std::string attr, float *ptr, size_t numDims, size_t *pDimSize );
 
 private:
 
@@ -39,11 +42,13 @@ private:
   static const std::string PY_FINALIZE_METHOD;
   static const std::string PY_MAIN_METHOD;
 
-  std::unique_ptr< pybind11::scoped_interpreter >       *pGuard_;            ///< Directly maintain the lifetime of this guard within this scope
+  std::unique_ptr< pybind11::scoped_interpreter >        upGuard_;            ///< Directly maintain the lifetime of this guard within this scope
   std::vector< std::string >                             userDirectories_;   ///< User supplied locations for user python modules
   std::unordered_map< std::string, pybind11::module_ >   pymodules_;         ///< Map of pymodules loaded ready to be called
   std::unordered_map< std::string, pybind11::module_ >   pymodulesEmbedded_; ///< Map of embedded pymodules available to python
 
+  std::vector< float > demoData_;
+  size_t               demoSize_[1];
 
   // Python modules
   pybind11::module_   sys_;
@@ -54,16 +59,16 @@ private:
 extern "C"
 {
 
-EmbeddedInterpreter * EmbeddedInterpreter_ctor      ();
-void                  EmbeddedInterpreter_dtor      ( EmbeddedInterpreter *this );
-void                  EmbeddedInterpreter_initialize( EmbeddedInterpreter *this );
-void                  EmbeddedInterpreter_finalize  ( EmbeddedInterpreter *this );
-void                  EmbeddedInterpreter_addToScope( EmbeddedInterpreter *this, char *directory );
-void                  EmbeddedInterpreter_pymoduleLoad      ( EmbeddedInterpreter *this, char *pymodule );
-void                  EmbeddedInterpreter_pymoduleInitialize( EmbeddedInterpreter *this, char *pymodule );
-void                  EmbeddedInterpreter_pymoduleFinalize  ( EmbeddedInterpreter *this, char *pymodule );
-void                  EmbeddedInterpreter_pymoduleCall      ( EmbeddedInterpreter *this, char *pymodule );
-void                  EmbeddedInterpreter_embedFloatPtr     ( EmbeddedInterpreter *this, char *pymodule, char *attr, float *ptr, size_t numDims, size_t *pDimSize )
+void                  EmbeddedInterpreter_ctor      ( EmbeddedInterpreter **ppObj );
+void                  EmbeddedInterpreter_dtor      ( EmbeddedInterpreter **ppObj );
+void                  EmbeddedInterpreter_initialize( EmbeddedInterpreter **ppObj );
+void                  EmbeddedInterpreter_finalize  ( EmbeddedInterpreter **ppObj );
+void                  EmbeddedInterpreter_addToScope( EmbeddedInterpreter **ppObj, char *directory );
+void                  EmbeddedInterpreter_pymoduleLoad      ( EmbeddedInterpreter **ppObj, char *pymodule );
+void                  EmbeddedInterpreter_pymoduleInitialize( EmbeddedInterpreter **ppObj, char *pymodule );
+void                  EmbeddedInterpreter_pymoduleFinalize  ( EmbeddedInterpreter **ppObj, char *pymodule );
+void                  EmbeddedInterpreter_pymoduleCall      ( EmbeddedInterpreter **ppObj, char *pymodule );
+void                  EmbeddedInterpreter_embedFloatPtr     ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, float *ptr, size_t numDims, size_t *pDimSize );
 
 }
 
