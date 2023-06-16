@@ -4,9 +4,10 @@ enable_language( C CXX Fortran )
 set( CMAKE_CXX_STANDARD 11 )
 # Use link paths as rpaths 
 set( CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE )
+set( CMAKE_Fortran_PREPROCESS ON )
 
-option( USE_MPI    OFF )
-option( USE_OPENMP OFF )
+set( USE_MPI    OFF )
+set( USE_OPENMP OFF  )
 
 set( PROJECT_TARGET pybindDemo )
 project( ${PROJECT_TARGET} )
@@ -17,12 +18,12 @@ if ( NOT DEFINED PYBIND11_DIR )
 endif()
 
 if ( USE_MPI )
-  find_package( MPI REQUIRED COMPONENTS Fortran )
+  find_package( MPI REQUIRED COMPONENTS Fortran CXX )
   target_compile_definitions( ${PROJECT_TARGET} PRIVATE -DUSE_MPI=1 )
 endif()
 
 if ( USE_OPENMP )
-  find_package( OpenMP REQUIRED COMPONENTS Fortran )
+  find_package( OpenMP REQUIRED COMPONENTS Fortran CXX )
   if ( NOT OpenMP_Fortran_FOUND )
     message( "OpenMP_Fortran_FOUND => ${OpenMP_Fortran_FOUND}" )
   endif()
@@ -39,6 +40,7 @@ target_link_libraries(  ${PROJECT_TARGET}
                           PRIVATE
                             $<$<BOOL:${USE_MPI}>:$<TARGET_NAME_IF_EXISTS:MPI::MPI_Fortran>>
                             $<$<BOOL:${USE_OPENMP}>:$<TARGET_NAME_IF_EXISTS:OpenMP::OpenMP_Fortran>>
+                            $<$<BOOL:${USE_OPENMP}>:$<TARGET_NAME_IF_EXISTS:OpenMP::OpenMP_CXX>>
                             Python::Python
                         )
 
