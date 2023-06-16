@@ -38,6 +38,38 @@ module EmbeddedInterpreter
       ! return void
     end subroutine EmbeddedInterpreter_finalize
 
+    subroutine EmbeddedInterpreter_threadingInit          ( eiPtr )             bind( c, name="EmbeddedInterpreter_threadingInit"           )
+      ! get iso_c_binding types
+      import
+      implicit none
+      type( c_ptr ), intent( in ) :: eiPtr
+      ! return void
+    end subroutine EmbeddedInterpreter_threadingInit
+
+    subroutine EmbeddedInterpreter_threadingStart          ( eiPtr )             bind( c, name="EmbeddedInterpreter_threadingStart"           )
+      ! get iso_c_binding types
+      import
+      implicit none
+      type( c_ptr ), intent( in ) :: eiPtr
+      ! return void
+    end subroutine EmbeddedInterpreter_threadingStart
+
+    subroutine EmbeddedInterpreter_threadingStop          ( eiPtr )             bind( c, name="EmbeddedInterpreter_threadingStop"           )
+      ! get iso_c_binding types
+      import
+      implicit none
+      type( c_ptr ), intent( in ) :: eiPtr
+      ! return void
+    end subroutine EmbeddedInterpreter_threadingStop
+
+    subroutine EmbeddedInterpreter_threadingFinalize          ( eiPtr )             bind( c, name="EmbeddedInterpreter_threadingFinalize"           )
+      ! get iso_c_binding types
+      import
+      implicit none
+      type( c_ptr ), intent( in ) :: eiPtr
+      ! return void
+    end subroutine EmbeddedInterpreter_threadingFinalize
+
     subroutine EmbeddedInterpreter_addToScope        ( eiPtr, directory )  bind( c, name="EmbeddedInterpreter_addToScope"         )
       ! get iso_c_binding types
       import

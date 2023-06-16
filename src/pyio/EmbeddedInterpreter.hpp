@@ -21,6 +21,11 @@ public:
   void initialize();
   void finalize();
 
+  void threadingInit();
+  void threadingStart();
+  void threadingStop();
+  void threadingFinalize();
+
   void addToScope( std::string directory );
 
   // Module handling
@@ -49,6 +54,11 @@ private:
 
   std::vector< float > demoData_;
   size_t               demoSize_[1];
+
+
+  // std::vector< PyThreadState * >  threadStates_;
+  std::vector< PyGILState_STATE > gilStates_;
+  PyThreadState                  *pMainThreadState_;
 
   // Python modules
   pybind11::module_   sys_;

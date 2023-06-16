@@ -7,6 +7,8 @@
 #include <iostream>
 #include <type_traits>
 
+#include <omp.h>
+
 #include "pybind11/pybind11.h"
 #include "pybind11/embed.h"
 #include "pybind11/numpy.h"
@@ -35,6 +37,19 @@ EmbeddedInterpreter::~EmbeddedInterpreter()
 void
 EmbeddedInterpreter::initialize()
 {
+  if ( Py_IsInitialized() )
+  {
+    
+#ifdef _OPENMP
+    pMainThreadState_ = PyThreadState_Get();
+    #pragma omp parallel
+    {
+      #pragma omp single
+      gilStates_.resize( omp_get_num_threads() + 1 );
+    }
+#endif
+  }
+  
 
   // Import sys
   sys_ = pybind11::module_::import( "sys" );
@@ -63,6 +78,69 @@ EmbeddedInterpreter::finalize()
     pymodules_.clear();
   }
 
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/// \brief "Initializes" threading capabilities of python
+////////////////////////////////////////////////////////////////////////////////
+void
+EmbeddedInterpreter::threadingInit()
+{
+#ifdef _OPENMP
+  if ( PyGILState_Check() ) 
+  {
+    // Prep and release GIL
+    pMainThreadState_ = PyEval_SaveThread();
+  }
+#endif
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/// \brief "Starts" threading capabilities of python
+////////////////////////////////////////////////////////////////////////////////
+void
+EmbeddedInterpreter::threadingStart()
+{
+#ifdef _OPENMP
+  if ( !PyGILState_Check() ) 
+  {
+    std::cout << "Acquiring GIL" << std::endl;
+    // swap your python thread state
+    gilStates_[ omp_get_thread_num() ] = PyGILState_Ensure();
+  }
+#endif
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/// \brief "Stops" threading capabilities of python
+////////////////////////////////////////////////////////////////////////////////
+void
+EmbeddedInterpreter::threadingStop()
+{
+#ifdef _OPENMP
+  if ( PyGILState_Check() ) 
+  {
+    // Let it gooooo
+    std::cout << "Releasing GIL" << std::endl;
+    // clean the thread state before leaving
+    PyGILState_Release( gilStates_[ omp_get_thread_num() ] );
+  }
+#endif
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/// \brief "Finalizes" threading capabilities of python
+////////////////////////////////////////////////////////////////////////////////
+void
+EmbeddedInterpreter::threadingFinalize()
+{
+#ifdef _OPENMP
+  if ( !PyGILState_Check() ) 
+  {
+    // We are back on the main thread, reacquire the GIL
+    PyEval_RestoreThread( pMainThreadState_ );
+  }
+#endif
 }
 
 
@@ -241,6 +319,54 @@ EmbeddedInterpreter_finalize  ( EmbeddedInterpreter **ppObj )
   std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
 #endif
   (*ppObj)->finalize();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/// \brief C binding for threadingInit
+////////////////////////////////////////////////////////////////////////////////
+void
+EmbeddedInterpreter_threadingInit  ( EmbeddedInterpreter **ppObj )
+{
+#ifndef NDEBUG
+  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+#endif
+  (*ppObj)->threadingInit();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/// \brief C binding for threadingStart
+////////////////////////////////////////////////////////////////////////////////
+void
+EmbeddedInterpreter_threadingStart  ( EmbeddedInterpreter **ppObj )
+{
+#ifndef NDEBUG
+  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+#endif
+  (*ppObj)->threadingStart();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/// \brief C binding for threadingStop
+////////////////////////////////////////////////////////////////////////////////
+void
+EmbeddedInterpreter_threadingStop  ( EmbeddedInterpreter **ppObj )
+{
+#ifndef NDEBUG
+  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+#endif
+  (*ppObj)->threadingStop();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/// \brief C binding for threadingFinalize
+////////////////////////////////////////////////////////////////////////////////
+void
+EmbeddedInterpreter_threadingFinalize  ( EmbeddedInterpreter **ppObj )
+{
+#ifndef NDEBUG
+  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+#endif
+  (*ppObj)->threadingFinalize();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
