@@ -261,6 +261,62 @@ EmbeddedInterpreter::embedFloatPtr( std::string pymodule, std::string attr, floa
 
 
 ////////////////////////////////////////////////////////////////////////////////
+/// \brief Builds into a module a float value returned from a function pointer
+////////////////////////////////////////////////////////////////////////////////
+void
+EmbeddedInterpreter::embedFloatValue( std::string pymodule, std::string attr, std::string attrCase, float(*func)(const char*) )
+{
+
+
+#ifndef NDEBUG
+            std::cout << __func__ << ": " <<  reinterpret_cast< void * >( func ) << std::endl;
+            std::cout << __func__ << ": " <<  attrCase << std::endl;
+#endif
+
+  // Get embedded module
+  pybind11::module_ mod = pymodulesEmbedded_[ std::string( pymodule ) ];
+
+  // Add attribute to it
+  mod.def(
+          attr.c_str(),
+          // Lambda
+          [=]() 
+          { 
+            return func( attrCase.c_str() ); 
+          }
+          );
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+/// \brief Builds into a module a int32 value returned from a function pointer
+////////////////////////////////////////////////////////////////////////////////
+void
+EmbeddedInterpreter::embedInt32Value( std::string pymodule, std::string attr, std::string attrCase, int32_t(*func)(const char*) )
+{
+
+#ifndef NDEBUG
+            std::cout << __func__ << ": " <<  reinterpret_cast< void * >( func ) << std::endl;
+            std::cout << __func__ << ": " <<  attrCase << std::endl;
+#endif
+
+  // Get embedded module
+  pybind11::module_ mod = pymodulesEmbedded_[ std::string( pymodule ) ];
+
+  // Add attribute to it
+  mod.def(
+          attr.c_str(),
+          // Lambda
+          [=]() 
+          { 
+            return func( attrCase.c_str() ); 
+          }
+          );
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 ///
 /// C bindings below
@@ -440,4 +496,28 @@ EmbeddedInterpreter_embedFloatPtr( EmbeddedInterpreter **ppObj, char *pymodule, 
   std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
 #endif
   (*ppObj)->embedFloatPtr( std::string( pymodule ), std::string( attr ), ptr, numDims, pDimSize );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/// \brief C binding for embedFloatValue
+////////////////////////////////////////////////////////////////////////////////
+void
+EmbeddedInterpreter_embedFloatValue( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, char *attrCase, float(*func)(const char*) )
+{
+#ifndef NDEBUG
+  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+#endif
+  (*ppObj)->embedFloatValue( std::string( pymodule ), std::string( attr ), std::string( attrCase ), func );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/// \brief C binding for embedInt32Value
+////////////////////////////////////////////////////////////////////////////////
+void
+EmbeddedInterpreter_embedInt32Value( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, char *attrCase, int32_t(*func)(const char*) )
+{
+#ifndef NDEBUG
+  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+#endif
+  (*ppObj)->embedInt32Value( std::string( pymodule ), std::string( attr ), std::string( attrCase ), func );
 }

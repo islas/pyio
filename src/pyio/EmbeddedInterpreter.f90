@@ -4,6 +4,15 @@ module EmbeddedInterpreter
   implicit none
   type( c_ptr ), public :: eimod_pEmbeddedInterpreter = c_null_ptr
 
+  abstract interface
+    function EmbeddedInterpreter_getFloatValueTemplate( attrCase ) result( attr )
+      import
+      implicit none
+      character( kind = c_char ), dimension(*), intent( in ) :: attrCase
+      real( c_float ) :: attr
+    end function 
+  end interface
+
   interface
     
     subroutine EmbeddedInterpreter_ctor              ( eiPtr )              bind( c, name="EmbeddedInterpreter_ctor"               )
@@ -127,6 +136,30 @@ module EmbeddedInterpreter
       integer( c_size_t ), dimension(*), intent( in ) :: dimSize
       ! return void
     end subroutine EmbeddedInterpreter_embedFloatPtr
+
+    subroutine EmbeddedInterpreter_embedFloatValue     ( eiPtr, pymodule, attr, attrCase, func ) bind( c, name="EmbeddedInterpreter_embedFloatValue"      )
+      ! get iso_c_binding types
+      import
+      implicit none
+      type( c_ptr ), intent( in ) :: eiPtr
+      character( kind = c_char ), dimension(*), intent( in ) :: pymodule
+      character( kind = c_char ), dimension(*), intent( in ) :: attr
+      character( kind = c_char ), dimension(*), intent( in ) :: attrCase
+      type( c_funptr ), value, intent( in ) :: func
+      ! return void
+    end subroutine EmbeddedInterpreter_embedFloatValue
+
+    subroutine EmbeddedInterpreter_embedInt32Value     ( eiPtr, pymodule, attr, attrCase, func ) bind( c, name="EmbeddedInterpreter_embedInt32Value"      )
+      ! get iso_c_binding types
+      import
+      implicit none
+      type( c_ptr ), intent( in ) :: eiPtr
+      character( kind = c_char ), dimension(*), intent( in ) :: pymodule
+      character( kind = c_char ), dimension(*), intent( in ) :: attr
+      character( kind = c_char ), dimension(*), intent( in ) :: attrCase
+      type( c_funptr ), value, intent( in ) :: func
+      ! return void
+    end subroutine EmbeddedInterpreter_embedInt32Value
 
   end interface
 
