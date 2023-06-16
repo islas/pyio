@@ -1,7 +1,8 @@
 import os
 import numpy
 import runtime_data
-import demo 
+import static_data
+import demo
 
 filename = ""
 logstr   = "{file}:{func} : "
@@ -16,14 +17,26 @@ def main( ) :
   print( logstr.format( file=filename, func=main.__name__ ) )
   print( "Hello Fortran!" )
 
-  print( type( runtime_data.arr() ) )
-  print( runtime_data.arr().flags )
+  arr = runtime_data.arr()
 
-  print( demo.demoData() )
-  print( runtime_data.arr() )
+  # print( type( arr ) )
+  # print( arr.flags )
 
-  runtime_data.arr()[5] = 999
+  # print( demo.demoData() )
+  # print( arr )
+  
 
-  print( runtime_data.arr() )
+  # arr[5] = 999
+  # arr[2] = static_data.getDemo1()
+  # arr[1] = static_data.getDemo2()
+  # arr[0] = static_data.getDemo3()
+  id = runtime_data.omp_id()
+
+  if id < arr.size :
+    print( "Writing from thread {}".format( id ) )
+    arr[id] = id
+ 
+
+  # print( runtime_data.arr() )
   
 
