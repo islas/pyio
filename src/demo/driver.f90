@@ -61,7 +61,9 @@ program driver
   use EmbeddedInterpreter
   use f_c_helpers
   use Demo
+#ifdef _OPENMP
   use omp_lib
+#endif
 
   implicit none
 
@@ -71,6 +73,7 @@ program driver
   integer( c_size_t )               :: numDims = 1
   integer                           :: i
   integer                           :: id
+#include "built_in_path.inc"
 
   arr(:) = 0
   
@@ -79,7 +82,10 @@ program driver
   
 
   call EmbeddedInterpreter_initialize( interpreter )
-  call EmbeddedInterpreter_addToScope( interpreter,  f_c_string( "/glade/u/home/aislas/pythonBindings/demo/pymodules/" ) )
+  call EmbeddedInterpreter_addToScope( interpreter,  f_c_string( BUILT_IN_PATH ) )
+
+  call EmbeddedInterpreter_embeddedPymoduleLoad( "runtime_data" )
+  call EmbeddedInterpreter_embeddedPymoduleLoad( "static_data"  )
   
   
   ! Add embedded values
@@ -97,7 +103,7 @@ program driver
   call EmbeddedInterpreter_pymoduleLoad( interpreter,  f_c_string( "interp.euler" ) )
 
   ! Typical steps to be done - init, then call as needed, fin
-  call EmbeddedInterpreter_pymoduleInitialize( interpreter,  f_c_string( "interp.euler" ) )
+  call EmbeddedInterpreter_pymoduleCall( interpreter,  f_c_string( "interp.euler" ), f_c_string( "initialize" ) )
 
   call EmbeddedInterpreter_threadingInit( interpreter )
   ! Do some parallel processing
@@ -108,8 +114,7 @@ program driver
 #endif
     
     call EmbeddedInterpreter_threadingStart( interpreter )
-    
-    call EmbeddedInterpreter_pymoduleCall      ( interpreter,  f_c_string( "interp.euler" ) )
+    call EmbeddedInterpreter_pymoduleCall( interpreter,  f_c_string( "interp.euler" ), f_c_string( "main" ) )
     call EmbeddedInterpreter_threadingStop( interpreter )
   
   end do
@@ -117,7 +122,7 @@ program driver
   call EmbeddedInterpreter_threadingFinalize( interpreter )
   call sleep(5)
 
-  call EmbeddedInterpreter_pymoduleFinalize  ( interpreter,  f_c_string( "interp.euler" ) )
+  call EmbeddedInterpreter_pymoduleCall( interpreter,  f_c_string( "interp.euler" ), f_c_string( "finalize" ) )
 
   ! finalize
   call EmbeddedInterpreter_finalize( interpreter )

@@ -1,0 +1,12 @@
+# WRF CMake Package
+
+@PACKAGE_INIT@
+
+include( "${CMAKE_CURRENT_LIST_DIR}/@EXPORT_NAME@Targets.cmake" )
+
+set( WRF_VERSION @PROJECT_VERSION@ )
+
+# Options WPS was built with
+set( pyio_USE_OPENMP      @USE_OPENMP@ )
+
+check_required_components( "pyio" )

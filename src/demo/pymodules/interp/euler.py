@@ -19,24 +19,15 @@ def main( ) :
 
   arr = runtime_data.arr()
 
-  # print( type( arr ) )
-  # print( arr.flags )
+  print( type( arr ) )
+  print( arr.flags )
 
-  # print( demo.demoData() )
-  # print( arr )
-  
-
-  # arr[5] = 999
-  # arr[2] = static_data.getDemo1()
-  # arr[1] = static_data.getDemo2()
-  # arr[0] = static_data.getDemo3()
+  arr[5] = 999
+  arr[2] = static_data.getDemo1()
+  arr[1] = static_data.getDemo2()
+  arr[0] = static_data.getDemo3()
   id = runtime_data.omp_id()
 
   if id < arr.size :
     print( "Writing from thread {}".format( id ) )
-    arr[id] = id
- 
-
-  # print( runtime_data.arr() )
-  
 
