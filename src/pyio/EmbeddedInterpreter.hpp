@@ -30,16 +30,18 @@ public:
 
   // Module handling
   void pymoduleLoad      ( std::string pymodule );
-  void pymoduleInitialize( std::string pymodule );
-  void pymoduleFinalize  ( std::string pymodule );
-
   void pymoduleCall      ( std::string pymodule );
 
+  // Embedded module loading
+  void embeddedPymoduleLoad( std::string pymodule );
 
-  // Building python-accesible modules
-  void embedFloatPtr  ( std::string pymodule, std::string attr, float *ptr, size_t numDims, size_t *pDimSize );
-  void embedFloatValue( std::string pymodule, std::string attr, std::string attrCase, float(*func)(const char*) );
-  void embedInt32Value( std::string pymodule, std::string attr, std::string attrCase, int32_t(*func)(const char*) );
+  // Building python-accesible modules - only operable on pymodules loaded from embedPymoduleLoad
+  void embedDoublePtr ( std::string pymodule, std::string attr, double *ptr, size_t numDims, size_t *pDimSize );
+  void embedFloatPtr  ( std::string pymodule, std::string attr, float  *ptr, size_t numDims, size_t *pDimSize );
+  void embedFloatValueCase( std::string pymodule, std::string attr, std::string attrCase, float(*func)(const char*) );
+  void embedInt32ValueCase( std::string pymodule, std::string attr, std::string attrCase, int32_t(*func)(const char*) );
+  void embedFloatValue    ( std::string pymodule, std::string attr, float(*func)(void) );
+  void embedInt32Value    ( std::string pymodule, std::string attr, int32_t(*func)(void) );
 
 private:
 
@@ -53,10 +55,6 @@ private:
   std::vector< std::string >                             userDirectories_;   ///< User supplied locations for user python modules
   std::unordered_map< std::string, pybind11::module_ >   pymodules_;         ///< Map of pymodules loaded ready to be called
   std::unordered_map< std::string, pybind11::module_ >   pymodulesEmbedded_; ///< Map of embedded pymodules available to python
-
-  std::vector< float > demoData_;
-  size_t               demoSize_[1];
-
 
   // std::vector< PyThreadState * >  threadStates_;
   std::vector< PyGILState_STATE > gilStates_;
@@ -80,13 +78,15 @@ void                  EmbeddedInterpreter_threadingStart   ( EmbeddedInterpreter
 void                  EmbeddedInterpreter_threadingStop    ( EmbeddedInterpreter **ppObj );
 void                  EmbeddedInterpreter_threadingFinalize( EmbeddedInterpreter **ppObj );
 void                  EmbeddedInterpreter_addToScope( EmbeddedInterpreter **ppObj, char *directory );
-void                  EmbeddedInterpreter_pymoduleLoad      ( EmbeddedInterpreter **ppObj, char *pymodule );
-void                  EmbeddedInterpreter_pymoduleInitialize( EmbeddedInterpreter **ppObj, char *pymodule );
-void                  EmbeddedInterpreter_pymoduleFinalize  ( EmbeddedInterpreter **ppObj, char *pymodule );
-void                  EmbeddedInterpreter_pymoduleCall      ( EmbeddedInterpreter **ppObj, char *pymodule );
-void                  EmbeddedInterpreter_embedFloatPtr     ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, float *ptr, size_t numDims, size_t *pDimSize );
-void                  EmbeddedInterpreter_embedFloatValue   ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, char *attrCase, float(*func)(const char*) );
-void                  EmbeddedInterpreter_embedInt32Value   ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, char *attrCase, int32_t(*func)(const char*) );
+void                  EmbeddedInterpreter_pymoduleLoad        ( EmbeddedInterpreter **ppObj, char *pymodule );
+void                  EmbeddedInterpreter_pymoduleCall        ( EmbeddedInterpreter **ppObj, char *pymodule );
+void                  EmbeddedInterpreter_embeddedPymoduleLoad( EmbeddedInterpreter **ppObj, char *pymodule );
+void                  EmbeddedInterpreter_embedDoublePtr      ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, double *ptr, size_t numDims, size_t *pDimSize );
+void                  EmbeddedInterpreter_embedFloatPtr       ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, float  *ptr, size_t numDims, size_t *pDimSize );
+void                  EmbeddedInterpreter_embedFloatValueCase ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, char  *attrCase, float(*func)(const char*) );
+void                  EmbeddedInterpreter_embedInt32ValueCase ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, char  *attrCase, int32_t(*func)(const char*) );
+void                  EmbeddedInterpreter_embedFloatValue     ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, float(*func)(void) );
+void                  EmbeddedInterpreter_embedInt32Value     ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, int32_t(*func)(void) );
 
 }
 
