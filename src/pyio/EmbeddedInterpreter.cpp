@@ -9,7 +9,9 @@
 
 #include <fenv.h>
 
+#ifdef _OPENMP
 #include <omp.h>
+#endif
 
 #include "pybind11/pybind11.h"
 #include "pybind11/embed.h"
@@ -18,10 +20,6 @@
 // https://github.com/numpy/numpy/issues/20504
 #define  FPE_GUARD_START( stash ) fenv_t stash; feholdexcept( &stash )
 #define  FPE_GUARD_STOP ( stash ) fesetenv( &stash )
-
-const std::string EmbeddedInterpreter::PY_INITIALIZE_METHOD   = "initialize";
-const std::string EmbeddedInterpreter::PY_FINALIZE_METHOD     = "finalize";
-const std::string EmbeddedInterpreter::PY_MAIN_METHOD         = "main";
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief Ctor

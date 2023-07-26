@@ -45,12 +45,6 @@ public:
 
 private:
 
-  void createBaseEmbeddedModules( );
-
-  static const std::string PY_INITIALIZE_METHOD;
-  static const std::string PY_FINALIZE_METHOD;
-  static const std::string PY_MAIN_METHOD;
-
   pybind11::scoped_interpreter        guard_;            ///< Directly maintain the lifetime of this guard within this scope
   std::vector< std::string >                             userDirectories_;   ///< User supplied locations for user python modules
   std::unordered_map< std::string, pybind11::module_ >   pymodules_;         ///< Map of pymodules loaded ready to be called
