@@ -12,6 +12,12 @@ set( PROJECT_TARGET pyio )
 project( ${PROJECT_TARGET} )
 set( EXPORT_NAME ${PROJECT_NAME} )
 
+file( STRINGS ${PROJECT_SOURCE_DIR}/versions.txt VERSION_FILE_OUTPUT )
+list( POP_FRONT VERSION_FILE_OUTPUT PYIO_VERSION )
+set( PROJECT_VERSION ${PYIO_VERSION} )
+
+message( STATUS "Setting project version to ${PROJECT_VERSION}" )
+
 if ( NOT DEFINED PYBIND11_DIR )
   set( PYBIND11_DIR ${PROJECT_SOURCE_DIR}/../pybind11/ )
 endif()
@@ -23,7 +29,8 @@ if ( USE_OPENMP )
   find_package( OpenMP REQUIRED COMPONENTS Fortran CXX )
 endif()
 
-find_package( Python 3.0 REQUIRED COMPONENTS Development.Embed )
+set( Python3_FIND_VIRTUALENV FIRST )
+find_package( Python 3.0 REQUIRED COMPONENTS Development.Embed Interpreter )
 
 # Create exec
 add_library   ( ${PROJECT_NAME} SHARED )
@@ -47,16 +54,18 @@ target_link_libraries(
 
 target_include_directories( ${PROJECT_NAME}
                             PUBLIC
+                              $<BUILD_INTERFACE:$<TARGET_PROPERTY:${PROJECT_NAME},Fortran_MODULE_DIRECTORY>>
                               $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/pyio>
                               $<INSTALL_INTERFACE:include/>
                             PRIVATE
                               ${PYBIND11_DIR}/include
                             )
 
-# target_include_directories( ${PROJECT_NAME}_demo
-#                             PRIVATE
-                              
-#                             )
+target_include_directories(
+                            ${PROJECT_NAME}_demo
+                            PRIVATE
+                              ${PYBIND11_DIR}/include
+                            )
 
 set_target_properties(
                       ${PROJECT_NAME}
@@ -78,6 +87,8 @@ set_target_properties(
                           Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/demo/
                           Fortran_FORMAT           FREE
                           EXPORT_PROPERTIES        Fortran_MODULE_DIRECTORY
+                          LINKER_LANGUAGE          Fortran
+                          INSTALL_RPATH            ${CMAKE_INSTALL_PREFIX}/lib
                       )
 
 ################################################################################

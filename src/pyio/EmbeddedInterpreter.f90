@@ -185,10 +185,6 @@ module EmbeddedInterpreter
     procedure EmbeddedInterpreter_embedDoublePtr, EmbeddedInterpreter_embedFloatPtr
   end interface
 
-  interface EmbeddedInterpreter_embedValue
-    procedure EmbeddedInterpreter_embedFloatValue, EmbeddedInterpreter_embedInt32Value
-  end interface
-
   contains
 
 end module EmbeddedInterpreter

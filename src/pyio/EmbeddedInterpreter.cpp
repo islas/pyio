@@ -19,7 +19,7 @@
 
 // https://github.com/numpy/numpy/issues/20504
 #define  FPE_GUARD_START( stash ) fenv_t stash; feholdexcept( &stash )
-#define  FPE_GUARD_STOP ( stash ) fesetenv( &stash )
+#define  FPE_GUARD_STOP( stash )  fesetenv( &stash )
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief Ctor
@@ -154,9 +154,9 @@ EmbeddedInterpreter::addToScope( std::string directory )
 void
 EmbeddedInterpreter::embeddedPymoduleLoad( std::string pymodule )
 {
-  FPE_GUARD_START();
+  FPE_GUARD_START( fpeTemp );
   pymodulesEmbedded_[ pymodule ] = pybind11::module_::import( pymodule.c_str() );
-  FPE_GUARD_STOP();
+  FPE_GUARD_STOP( fpeTemp );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -165,9 +165,9 @@ EmbeddedInterpreter::embeddedPymoduleLoad( std::string pymodule )
 void
 EmbeddedInterpreter::pymoduleLoad( std::string pymodule )
 {
-  FPE_GUARD_START();
+  FPE_GUARD_START( fpeTemp );
   pybind11::module_ loaded = pybind11::module_::import( pymodule.c_str() );
-  FPE_GUARD_STOP();
+  FPE_GUARD_STOP( fpeTemp );
 
   pymodules_[ pymodule ] = loaded;
 }
@@ -178,12 +178,12 @@ EmbeddedInterpreter::pymoduleLoad( std::string pymodule )
 void
 EmbeddedInterpreter::pymoduleCall( std::string pymodule, std::string function )
 {
-  FPE_GUARD_START();
+  FPE_GUARD_START( fpeTemp );
   if ( pybind11::hasattr( pymodules_[ pymodule ], function.c_str() ) )
   {
     pymodules_[ pymodule ].attr( function.c_str() )();
   }
-  FPE_GUARD_STOP();
+  FPE_GUARD_STOP( fpeTemp );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -192,7 +192,7 @@ EmbeddedInterpreter::pymoduleCall( std::string pymodule, std::string function )
 void
 EmbeddedInterpreter::embedDoublePtr( std::string pymodule, std::string attr, double *ptr, size_t numDims, size_t *pDimSize )
 {
-  FPE_GUARD_START();
+  FPE_GUARD_START( fpeTemp );
   // Get embedded module
   pybind11::module_ mod = pymodulesEmbedded_[ std::string( pymodule ) ];
 
@@ -214,7 +214,7 @@ EmbeddedInterpreter::embedDoublePtr( std::string pymodule, std::string attr, dou
           },
           pybind11::return_value_policy::automatic_reference
           );
-  FPE_GUARD_STOP();
+  FPE_GUARD_STOP( fpeTemp );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -223,7 +223,7 @@ EmbeddedInterpreter::embedDoublePtr( std::string pymodule, std::string attr, dou
 void
 EmbeddedInterpreter::embedFloatPtr( std::string pymodule, std::string attr, float *ptr, size_t numDims, size_t *pDimSize )
 {
-  FPE_GUARD_START();
+  FPE_GUARD_START( fpeTemp );
   // Get embedded module
   pybind11::module_ mod = pymodulesEmbedded_[ std::string( pymodule ) ];
 
@@ -245,7 +245,7 @@ EmbeddedInterpreter::embedFloatPtr( std::string pymodule, std::string attr, floa
           },
           pybind11::return_value_policy::automatic_reference
           );
-  FPE_GUARD_STOP();
+  FPE_GUARD_STOP( fpeTemp );
 }
 
 
@@ -313,7 +313,6 @@ EmbeddedInterpreter::embedFloatValue( std::string pymodule, std::string attr, fl
 
 #ifndef NDEBUG
             std::cout << __func__ << ": " <<  reinterpret_cast< void * >( func ) << std::endl;
-            std::cout << __func__ << ": " <<  attrCase << std::endl;
 #endif
 
   // Get embedded module
@@ -340,7 +339,6 @@ EmbeddedInterpreter::embedInt32Value( std::string pymodule, std::string attr, in
 
 #ifndef NDEBUG
             std::cout << __func__ << ": " <<  reinterpret_cast< void * >( func ) << std::endl;
-            std::cout << __func__ << ": " <<  attrCase << std::endl;
 #endif
 
   // Get embedded module

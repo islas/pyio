@@ -30,7 +30,7 @@ public:
 
   // Module handling
   void pymoduleLoad      ( std::string pymodule );
-  void pymoduleCall      ( std::string pymodule );
+  void pymoduleCall      ( std::string pymodule, std::string function );
 
   // Embedded module loading
   void embeddedPymoduleLoad( std::string pymodule );
@@ -73,7 +73,7 @@ void                  EmbeddedInterpreter_threadingStop    ( EmbeddedInterpreter
 void                  EmbeddedInterpreter_threadingFinalize( EmbeddedInterpreter **ppObj );
 void                  EmbeddedInterpreter_addToScope( EmbeddedInterpreter **ppObj, char *directory );
 void                  EmbeddedInterpreter_pymoduleLoad        ( EmbeddedInterpreter **ppObj, char *pymodule );
-void                  EmbeddedInterpreter_pymoduleCall        ( EmbeddedInterpreter **ppObj, char *pymodule );
+void                  EmbeddedInterpreter_pymoduleCall        ( EmbeddedInterpreter **ppObj, char *pymodule, char *function );
 void                  EmbeddedInterpreter_embeddedPymoduleLoad( EmbeddedInterpreter **ppObj, char *pymodule );
 void                  EmbeddedInterpreter_embedDoublePtr      ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, double *ptr, size_t numDims, size_t *pDimSize );
 void                  EmbeddedInterpreter_embedFloatPtr       ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, float  *ptr, size_t numDims, size_t *pDimSize );

@@ -84,19 +84,19 @@ program driver
   call EmbeddedInterpreter_initialize( interpreter )
   call EmbeddedInterpreter_addToScope( interpreter,  f_c_string( BUILT_IN_PATH ) )
 
-  call EmbeddedInterpreter_embeddedPymoduleLoad( "runtime_data" )
-  call EmbeddedInterpreter_embeddedPymoduleLoad( "static_data"  )
+  call EmbeddedInterpreter_embeddedPymoduleLoad( interpreter, f_c_string( "runtime_data" ) )
+  call EmbeddedInterpreter_embeddedPymoduleLoad( interpreter, f_c_string( "static_data"  ) )
   
   
   ! Add embedded values
   call EmbeddedInterpreter_embedFloatPtr( interpreter, f_c_string( "runtime_data" ), f_c_string( "arr" ), arr, numDims, dims )
-  call EmbeddedInterpreter_embedFloatValue( interpreter, f_c_string( "static_data" ), f_c_string( "getDemo1" ), f_c_string( "demo1" ), c_funloc( getRegularFloatValue ) )
-  call EmbeddedInterpreter_embedFloatValue( interpreter, f_c_string( "static_data" ), f_c_string( "getDemo2" ), f_c_string( "demo2" ), c_funloc( getRegularFloatValue ) )
-  call EmbeddedInterpreter_embedFloatValue( interpreter, f_c_string( "static_data" ), f_c_string( "getDemo3" ), f_c_string( "demo3" ), c_funloc( getRegularFloatValue ) )
+  call EmbeddedInterpreter_embedFloatValueCase( interpreter, f_c_string( "static_data" ), f_c_string( "getDemo1" ), f_c_string( "demo1" ), c_funloc( getRegularFloatValue ) )
+  call EmbeddedInterpreter_embedFloatValueCase( interpreter, f_c_string( "static_data" ), f_c_string( "getDemo2" ), f_c_string( "demo2" ), c_funloc( getRegularFloatValue ) )
+  call EmbeddedInterpreter_embedFloatValueCase( interpreter, f_c_string( "static_data" ), f_c_string( "getDemo3" ), f_c_string( "demo3" ), c_funloc( getRegularFloatValue ) )
 
 
-  call EmbeddedInterpreter_embedInt32Value( interpreter, f_c_string( "runtime_data" ), f_c_string( "omp_enabled" ), f_c_string( "omp" ), c_funloc( getRegularInt32Value ) )
-  call EmbeddedInterpreter_embedInt32Value( interpreter, f_c_string( "runtime_data" ), f_c_string( "omp_id" ), f_c_string( "omp_get_thread_num" ), c_funloc( getRegularInt32Value ) )
+  call EmbeddedInterpreter_embedInt32ValueCase( interpreter, f_c_string( "runtime_data" ), f_c_string( "omp_enabled" ), f_c_string( "omp" ), c_funloc( getRegularInt32Value ) )
+  call EmbeddedInterpreter_embedInt32ValueCase( interpreter, f_c_string( "runtime_data" ), f_c_string( "omp_id" ), f_c_string( "omp_get_thread_num" ), c_funloc( getRegularInt32Value ) )
 
 
   ! Use user module
