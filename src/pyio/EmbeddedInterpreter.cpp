@@ -1,11 +1,13 @@
 
 #include "EmbeddedInterpreter.hpp"
 
-#include <vector>
-#include <string>
-#include <list>
 #include <iostream>
+#include <list>
+#include <sstream>
+#include <stdexcept>
+#include <string>
 #include <type_traits>
+#include <vector>
 
 #include <fenv.h>
 
@@ -25,6 +27,7 @@
 /// \brief Ctor
 ////////////////////////////////////////////////////////////////////////////////
 EmbeddedInterpreter::EmbeddedInterpreter()
+  : autoLoad_( false )
 {
 }
 
@@ -355,6 +358,31 @@ EmbeddedInterpreter::embedInt32Value( std::string pymodule, std::string attr, in
           );
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \brief Checks if the embedded python module has been loaded and reports findings
+///        if necessary or simply loads
+////////////////////////////////////////////////////////////////////////////////
+bool
+EmbeddedInterpreter::checkEmbeddedModuleLoaded(
+                                                std::string pymodule ///< Python module to operate on
+                                                )
+{
+  if ( pymodulesEmbedded_.find( pymodule ) == pymodulesEmbedded_.end() )
+  {
+    if ( autoLoad_ )
+    {
+      embeddedPymoduleLoad( pymodule );
+    }
+    else
+    {
+      std::stringstream ss;
+      ss << __FILE__ << ":" << __LINE__ << " : Error: Module '" << pymodule << "' has not beed loaded" << std::endl;
+      std::cerr << ss.str();
+      throw std::runtime_error( ss.str() );
+    }
+  }
+  return true;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
