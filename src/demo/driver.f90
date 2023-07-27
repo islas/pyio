@@ -29,7 +29,7 @@ contains
     use omp_lib
     character( kind = c_char), dimension(*), intent( in ) :: attrCase
     character( len=64 ) :: attrCaseFortran
-    real( c_int32_t ) :: attr
+    integer( c_int32_t ) :: attr
 
     call c_f_string( attrCase, attrCaseFortran )
 
@@ -68,7 +68,7 @@ program driver
   implicit none
 
   type( c_ptr )         :: interpreter = c_null_ptr
-  real, dimension( 10 ) :: arr = [ 1:10 ]
+  real, dimension( 10 ) :: arr = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
   integer( c_size_t ), dimension(1) :: dims = [ 10 ]
   integer( c_size_t )               :: numDims = 1
   integer                           :: i
@@ -89,14 +89,25 @@ program driver
   
   
   ! Add embedded values
-  call EmbeddedInterpreter_embedFloatPtr( interpreter, f_c_string( "runtime_data" ), f_c_string( "arr" ), arr, numDims, dims )
-  call EmbeddedInterpreter_embedFloatValueCase( interpreter, f_c_string( "static_data" ), f_c_string( "getDemo1" ), f_c_string( "demo1" ), c_funloc( getRegularFloatValue ) )
-  call EmbeddedInterpreter_embedFloatValueCase( interpreter, f_c_string( "static_data" ), f_c_string( "getDemo2" ), f_c_string( "demo2" ), c_funloc( getRegularFloatValue ) )
-  call EmbeddedInterpreter_embedFloatValueCase( interpreter, f_c_string( "static_data" ), f_c_string( "getDemo3" ), f_c_string( "demo3" ), c_funloc( getRegularFloatValue ) )
+  call EmbeddedInterpreter_embedFloatPtr      ( interpreter, f_c_string( "runtime_data" ), &
+                                                f_c_string( "arr" ), arr, numDims, dims )
+  call EmbeddedInterpreter_embedFloatValueCase( interpreter, f_c_string( "static_data" ),  &
+                                                f_c_string( "getDemo1" ), f_c_string( "demo1" ), &
+                                                c_funloc( getRegularFloatValue ) )
+  call EmbeddedInterpreter_embedFloatValueCase( interpreter, f_c_string( "static_data" ),  &
+                                                f_c_string( "getDemo2" ), f_c_string( "demo2" ), &
+                                                c_funloc( getRegularFloatValue ) )
+  call EmbeddedInterpreter_embedFloatValueCase( interpreter, f_c_string( "static_data" ),  &
+                                                f_c_string( "getDemo3" ), f_c_string( "demo3" ), &
+                                                c_funloc( getRegularFloatValue ) )
 
 
-  call EmbeddedInterpreter_embedInt32ValueCase( interpreter, f_c_string( "runtime_data" ), f_c_string( "omp_enabled" ), f_c_string( "omp" ), c_funloc( getRegularInt32Value ) )
-  call EmbeddedInterpreter_embedInt32ValueCase( interpreter, f_c_string( "runtime_data" ), f_c_string( "omp_id" ), f_c_string( "omp_get_thread_num" ), c_funloc( getRegularInt32Value ) )
+  call EmbeddedInterpreter_embedInt32ValueCase( interpreter, f_c_string( "runtime_data" ), &
+                                                f_c_string( "omp_enabled" ), f_c_string( "omp" ), &
+                                                c_funloc( getRegularInt32Value ) )
+  call EmbeddedInterpreter_embedInt32ValueCase( interpreter, f_c_string( "runtime_data" ), &
+                                                f_c_string( "omp_id" ), f_c_string( "omp_get_thread_num" ), &
+                                                c_funloc( getRegularInt32Value ) )
 
 
   ! Use user module
