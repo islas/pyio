@@ -145,7 +145,9 @@ EmbeddedInterpreter::threadingFinalize()
 /// \brief Adds module search directories to the python interpreter
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter::addToScope( std::string directory )
+EmbeddedInterpreter::addToScope( 
+                                std::string directory ///< Directory that will be added to python module import path (sys.path)
+                                )
 {
   userDirectories_.push_back( directory );
   sysPathAppend_( directory );
@@ -155,7 +157,9 @@ EmbeddedInterpreter::addToScope( std::string directory )
 /// \brief "Creates" imports of the base modules provided
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter::embeddedPymoduleLoad( std::string pymodule )
+EmbeddedInterpreter::embeddedPymoduleLoad(
+                                          std::string pymodule ///< Python module to operate on
+                                          )
 {
   FPE_GUARD_START( fpeTemp );
   pymodulesEmbedded_[ pymodule ] = pybind11::module_::import( pymodule.c_str() );
@@ -166,7 +170,9 @@ EmbeddedInterpreter::embeddedPymoduleLoad( std::string pymodule )
 /// \brief Loads a pymodule into C++ scope to be used by C/C++/Fortran
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter::pymoduleLoad( std::string pymodule )
+EmbeddedInterpreter::pymoduleLoad(
+                                  std::string pymodule ///< Python module to operate on
+                                  )
 {
   FPE_GUARD_START( fpeTemp );
   pybind11::module_ loaded = pybind11::module_::import( pymodule.c_str() );
@@ -179,12 +185,21 @@ EmbeddedInterpreter::pymoduleLoad( std::string pymodule )
 /// \brief Calls a pymodule's void function
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter::pymoduleCall( std::string pymodule, std::string function )
+EmbeddedInterpreter::pymoduleCall(
+                                  std::string pymodule, ///< Python module to operate on
+                                  std::string function  ///< function name to invoke within pymodule
+                                  )
 {
   FPE_GUARD_START( fpeTemp );
   if ( pybind11::hasattr( pymodules_[ pymodule ], function.c_str() ) )
   {
     pymodules_[ pymodule ].attr( function.c_str() )();
+  }
+  else
+  {
+    std::cout << "Warning: Python module '"      << pymodule 
+              << "' does not contain function '" << function 
+              << "', not executed." << std::endl;
   }
   FPE_GUARD_STOP( fpeTemp );
 }
@@ -193,11 +208,18 @@ EmbeddedInterpreter::pymoduleCall( std::string pymodule, std::string function )
 /// \brief Builds into a module a double ptr to use
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter::embedDoublePtr( std::string pymodule, std::string attr, double *ptr, size_t numDims, size_t *pDimSize )
+EmbeddedInterpreter::embedDoublePtr(
+                                    std::string  pymodule, ///< Python module to operate on
+                                    std::string  attr,     ///< python attribute to associate this value with e.g. pymodule.attr()
+                                    double      *ptr,      ///< pointer to respective data to map, of element size PRODUCT(pDimSize) for numDims
+                                    size_t       numDims,  ///< dimensionality of the array (currently only using Fortran)
+                                    size_t      *pDimSize  ///< pointer of size numDims describing the respective size of each dim
+                                    )
 {
   FPE_GUARD_START( fpeTemp );
   // Get embedded module
-  pybind11::module_ mod = pymodulesEmbedded_[ std::string( pymodule ) ];
+  checkEmbeddedModuleLoaded( pymodule );
+  pybind11::module_ mod = pymodulesEmbedded_[ pymodule ];
 
   // We are okay to make copies of these since they should be "small"
   pybind11::array::ShapeContainer dims = pybind11::array::ShapeContainer( std::vector< ssize_t >( pDimSize, pDimSize + numDims ) );
@@ -224,11 +246,18 @@ EmbeddedInterpreter::embedDoublePtr( std::string pymodule, std::string attr, dou
 /// \brief Builds into a module a float ptr to use
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter::embedFloatPtr( std::string pymodule, std::string attr, float *ptr, size_t numDims, size_t *pDimSize )
+EmbeddedInterpreter::embedFloatPtr(
+                                    std::string  pymodule, ///< Python module to operate on
+                                    std::string  attr,     ///< python attribute to associate this value with e.g. pymodule.attr()
+                                    float       *ptr,      ///< pointer to respective data to map, of element size PRODUCT(pDimSize) for numDims
+                                    size_t       numDims,  ///< dimensionality of the array (currently only using Fortran)
+                                    size_t      *pDimSize  ///< pointer of size numDims describing the respective size of each dim
+                                    )
 {
   FPE_GUARD_START( fpeTemp );
   // Get embedded module
-  pybind11::module_ mod = pymodulesEmbedded_[ std::string( pymodule ) ];
+  checkEmbeddedModuleLoaded( pymodule );
+  pybind11::module_ mod = pymodulesEmbedded_[ pymodule ];
 
   // We are okay to make copies of these since they should be "small"
   pybind11::array::ShapeContainer dims = pybind11::array::ShapeContainer( std::vector< ssize_t >( pDimSize, pDimSize + numDims ) );
@@ -256,7 +285,12 @@ EmbeddedInterpreter::embedFloatPtr( std::string pymodule, std::string attr, floa
 /// \brief Builds into a module a float value returned from a function pointer
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter::embedFloatValueCase( std::string pymodule, std::string attr, std::string attrCase, float(*func)(const char*) )
+EmbeddedInterpreter::embedFloatValueCase(
+                                          std::string pymodule,      ///< Python module to operate on
+                                          std::string attr,          ///< python attribute to associate this value with e.g. pymodule.attr()
+                                          std::string attrCase,      ///< string identifier (often the same as attr) to distinguish this value
+                                          float (*func)(const char*) ///< A function pointer that takes a string identifier and returns the respective value
+                                          )
 {
 
 
@@ -266,7 +300,8 @@ EmbeddedInterpreter::embedFloatValueCase( std::string pymodule, std::string attr
 #endif
 
   // Get embedded module
-  pybind11::module_ mod = pymodulesEmbedded_[ std::string( pymodule ) ];
+  checkEmbeddedModuleLoaded( pymodule );
+  pybind11::module_ mod = pymodulesEmbedded_[ pymodule ];
 
   // Add attribute to it
   mod.def(
@@ -284,7 +319,12 @@ EmbeddedInterpreter::embedFloatValueCase( std::string pymodule, std::string attr
 /// \brief Builds into a module a int32 value returned from a function pointer
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter::embedInt32ValueCase( std::string pymodule, std::string attr, std::string attrCase, int32_t(*func)(const char*) )
+EmbeddedInterpreter::embedInt32ValueCase(
+                                          std::string pymodule,       ///< Python module to operate on
+                                          std::string attr,           ///< python attribute to associate this value with e.g. pymodule.attr()
+                                          std::string attrCase,       ///< string identifier (often the same as attr) to distinguish this value
+                                          int32_t(*func)(const char*) ///< A function pointer that takes a string identifier and returns the respective value
+                                          )
 {
 
 #ifndef NDEBUG
@@ -293,7 +333,8 @@ EmbeddedInterpreter::embedInt32ValueCase( std::string pymodule, std::string attr
 #endif
 
   // Get embedded module
-  pybind11::module_ mod = pymodulesEmbedded_[ std::string( pymodule ) ];
+  checkEmbeddedModuleLoaded( pymodule );
+  pybind11::module_ mod = pymodulesEmbedded_[ pymodule ];
 
   // Add attribute to it
   mod.def(
@@ -310,7 +351,11 @@ EmbeddedInterpreter::embedInt32ValueCase( std::string pymodule, std::string attr
 /// \brief Builds into a module a float value returned from a function pointer
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter::embedFloatValue( std::string pymodule, std::string attr, float(*func)(void) )
+EmbeddedInterpreter::embedFloatValue(
+                                      std::string pymodule, ///< Python module to operate on
+                                      std::string attr,     ///< python attribute to associate this value with e.g. pymodule.attr()
+                                      float(*func)(void)    ///< A function pointer that takes no arguments and returns the respective value
+                                      )
 {
 
 
@@ -319,7 +364,8 @@ EmbeddedInterpreter::embedFloatValue( std::string pymodule, std::string attr, fl
 #endif
 
   // Get embedded module
-  pybind11::module_ mod = pymodulesEmbedded_[ std::string( pymodule ) ];
+  checkEmbeddedModuleLoaded( pymodule );
+  pybind11::module_ mod = pymodulesEmbedded_[ pymodule ];
 
   // Add attribute to it
   mod.def(
@@ -337,7 +383,11 @@ EmbeddedInterpreter::embedFloatValue( std::string pymodule, std::string attr, fl
 /// \brief Builds into a module a int32 value returned from a function pointer
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter::embedInt32Value( std::string pymodule, std::string attr, int32_t(*func)(void) )
+EmbeddedInterpreter::embedInt32Value(
+                                      std::string pymodule, ///< Python module to operate on
+                                      std::string attr,     ///< python attribute to associate this value with e.g. pymodule.attr()
+                                      int32_t(*func)(void)  ///< A function pointer that takes no arguments and returns the respective value
+                                      )
 {
 
 #ifndef NDEBUG
@@ -345,7 +395,8 @@ EmbeddedInterpreter::embedInt32Value( std::string pymodule, std::string attr, in
 #endif
 
   // Get embedded module
-  pybind11::module_ mod = pymodulesEmbedded_[ std::string( pymodule ) ];
+  checkEmbeddedModuleLoaded( pymodule );
+  pybind11::module_ mod = pymodulesEmbedded_[ pymodule ];
 
   // Add attribute to it
   mod.def(
@@ -548,7 +599,7 @@ void
 EmbeddedInterpreter_embedDoublePtr( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, double *ptr, size_t numDims, size_t *pDimSize )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << " embedding pointer <" << static_cast< void * >( ptr ) << ">" << std::endl;
 #endif
   (*ppObj)->embedDoublePtr( std::string( pymodule ), std::string( attr ), ptr, numDims, pDimSize );
 }
@@ -560,7 +611,7 @@ void
 EmbeddedInterpreter_embedFloatPtr( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, float *ptr, size_t numDims, size_t *pDimSize )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << " embedding pointer <" << static_cast< void * >( ptr ) << ">" << std::endl;
 #endif
   (*ppObj)->embedFloatPtr( std::string( pymodule ), std::string( attr ), ptr, numDims, pDimSize );
 }

@@ -44,19 +44,24 @@ public:
   void embedInt32Value    ( std::string pymodule, std::string attr, int32_t(*func)(void) );
 
 private:
+  bool checkEmbeddedModuleLoaded( std::string pymodule );
 
+  
   pybind11::scoped_interpreter        guard_;            ///< Directly maintain the lifetime of this guard within this scope
   std::vector< std::string >                             userDirectories_;   ///< User supplied locations for user python modules
   std::unordered_map< std::string, pybind11::module_ >   pymodules_;         ///< Map of pymodules loaded ready to be called
   std::unordered_map< std::string, pybind11::module_ >   pymodulesEmbedded_; ///< Map of embedded pymodules available to python
 
-  // std::vector< PyThreadState * >  threadStates_;
-  std::vector< PyGILState_STATE > gilStates_;
-  PyThreadState                  *pMainThreadState_;
+  // OpenMP shenanigans
+  std::vector< PyGILState_STATE > gilStates_;        ///< retain gil states per thread to transform POSIX original threads to "python threads"
+  PyThreadState                  *pMainThreadState_; ///< retain main thread state
 
   // Python modules
   pybind11::module_   sys_;
   pybind11::function  sysPathAppend_;
+
+  
+  bool autoLoad_; ///< Automatic loading of any used embedded python modules during runtime
 
 };
 
