@@ -1,5 +1,5 @@
 cmake_minimum_required( VERSION 3.16 )
-
+set( CMAKE_BUILD_TYPE Debug )
 enable_language( C CXX Fortran )
 set( CMAKE_CXX_STANDARD 11 )
 # Use link paths as rpaths 
