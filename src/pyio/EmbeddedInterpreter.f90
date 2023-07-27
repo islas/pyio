@@ -6,7 +6,8 @@ module EmbeddedInterpreter
 
   interface
     
-    subroutine EmbeddedInterpreter_ctor              ( eiPtr )              bind( c, name="EmbeddedInterpreter_ctor"               )
+    subroutine EmbeddedInterpreter_ctor              ( eiPtr )              &
+      bind( c, name="EmbeddedInterpreter_ctor"               )
       ! get iso_c_binding types
       import
       implicit none
@@ -14,7 +15,8 @@ module EmbeddedInterpreter
       type( c_ptr ), intent( inout ) :: eiPtr
     end subroutine EmbeddedInterpreter_ctor
 
-    subroutine EmbeddedInterpreter_dtor              ( eiPtr )              bind( c, name="EmbeddedInterpreter_dtor"               )
+    subroutine EmbeddedInterpreter_dtor              ( eiPtr )              &
+      bind( c, name="EmbeddedInterpreter_dtor"               )
       ! get iso_c_binding types
       import
       implicit none
@@ -22,7 +24,8 @@ module EmbeddedInterpreter
       ! return void
     end subroutine EmbeddedInterpreter_dtor
 
-    subroutine EmbeddedInterpreter_initialize        ( eiPtr )              bind( c, name="EmbeddedInterpreter_initialize"         )
+    subroutine EmbeddedInterpreter_initialize        ( eiPtr )              &
+      bind( c, name="EmbeddedInterpreter_initialize"         )
       ! get iso_c_binding types
       import
       implicit none
@@ -30,7 +33,8 @@ module EmbeddedInterpreter
       ! return void
     end subroutine EmbeddedInterpreter_initialize
 
-    subroutine EmbeddedInterpreter_finalize          ( eiPtr )             bind( c, name="EmbeddedInterpreter_finalize"           )
+    subroutine EmbeddedInterpreter_finalize          ( eiPtr )             &
+      bind( c, name="EmbeddedInterpreter_finalize"           )
       ! get iso_c_binding types
       import
       implicit none
@@ -38,7 +42,8 @@ module EmbeddedInterpreter
       ! return void
     end subroutine EmbeddedInterpreter_finalize
 
-    subroutine EmbeddedInterpreter_threadingInit          ( eiPtr )             bind( c, name="EmbeddedInterpreter_threadingInit"           )
+    subroutine EmbeddedInterpreter_threadingInit          ( eiPtr )             &
+      bind( c, name="EmbeddedInterpreter_threadingInit"           )
       ! get iso_c_binding types
       import
       implicit none
@@ -46,7 +51,8 @@ module EmbeddedInterpreter
       ! return void
     end subroutine EmbeddedInterpreter_threadingInit
 
-    subroutine EmbeddedInterpreter_threadingStart          ( eiPtr )             bind( c, name="EmbeddedInterpreter_threadingStart"           )
+    subroutine EmbeddedInterpreter_threadingStart          ( eiPtr )             &
+      bind( c, name="EmbeddedInterpreter_threadingStart"           )
       ! get iso_c_binding types
       import
       implicit none
@@ -54,7 +60,8 @@ module EmbeddedInterpreter
       ! return void
     end subroutine EmbeddedInterpreter_threadingStart
 
-    subroutine EmbeddedInterpreter_threadingStop          ( eiPtr )             bind( c, name="EmbeddedInterpreter_threadingStop"           )
+    subroutine EmbeddedInterpreter_threadingStop          ( eiPtr )             &
+      bind( c, name="EmbeddedInterpreter_threadingStop"           )
       ! get iso_c_binding types
       import
       implicit none
@@ -62,7 +69,8 @@ module EmbeddedInterpreter
       ! return void
     end subroutine EmbeddedInterpreter_threadingStop
 
-    subroutine EmbeddedInterpreter_threadingFinalize          ( eiPtr )             bind( c, name="EmbeddedInterpreter_threadingFinalize"           )
+    subroutine EmbeddedInterpreter_threadingFinalize          ( eiPtr )             &
+      bind( c, name="EmbeddedInterpreter_threadingFinalize"           )
       ! get iso_c_binding types
       import
       implicit none
@@ -70,7 +78,8 @@ module EmbeddedInterpreter
       ! return void
     end subroutine EmbeddedInterpreter_threadingFinalize
 
-    subroutine EmbeddedInterpreter_addToScope        ( eiPtr, directory )  bind( c, name="EmbeddedInterpreter_addToScope"         )
+    subroutine EmbeddedInterpreter_addToScope        ( eiPtr, directory )  &
+      bind( c, name="EmbeddedInterpreter_addToScope"         )
       ! get iso_c_binding types
       import
       implicit none
@@ -79,7 +88,8 @@ module EmbeddedInterpreter
       ! return void
     end subroutine EmbeddedInterpreter_addToScope
 
-    subroutine EmbeddedInterpreter_pymoduleLoad      ( eiPtr, pymodule )   bind( c, name="EmbeddedInterpreter_pymoduleLoad"       )
+    subroutine EmbeddedInterpreter_pymoduleLoad      ( eiPtr, pymodule )   &
+      bind( c, name="EmbeddedInterpreter_pymoduleLoad"       )
       ! get iso_c_binding types
       import
       implicit none
@@ -88,7 +98,8 @@ module EmbeddedInterpreter
       ! return void
     end subroutine EmbeddedInterpreter_pymoduleLoad
 
-    subroutine EmbeddedInterpreter_pymoduleCall      ( eiPtr, pymodule, func )   bind( c, name="EmbeddedInterpreter_pymoduleCall"       )
+    subroutine EmbeddedInterpreter_pymoduleCall      ( eiPtr, pymodule, func )   &
+      bind( c, name="EmbeddedInterpreter_pymoduleCall"       )
       ! get iso_c_binding types
       import
       implicit none
@@ -98,7 +109,8 @@ module EmbeddedInterpreter
       ! return void
     end subroutine EmbeddedInterpreter_pymoduleCall
 
-    subroutine EmbeddedInterpreter_embeddedPymoduleLoad      ( eiPtr, pymodule )   bind( c, name="EmbeddedInterpreter_embeddedPymoduleLoad"       )
+    subroutine EmbeddedInterpreter_embeddedPymoduleLoad      ( eiPtr, pymodule )   &
+      bind( c, name="EmbeddedInterpreter_embeddedPymoduleLoad"       )
       ! get iso_c_binding types
       import
       implicit none
@@ -107,7 +119,8 @@ module EmbeddedInterpreter
       ! return void
     end subroutine EmbeddedInterpreter_embeddedPymoduleLoad
 
-    subroutine EmbeddedInterpreter_embedDoublePtr     ( eiPtr, pymodule, attr, ptr, numDims, dimSize ) bind( c, name="EmbeddedInterpreter_embedDoublePtr"      )
+    subroutine EmbeddedInterpreter_embedDoublePtr     ( eiPtr, pymodule, attr, ptr, numDims, dimSize ) &
+      bind( c, name="EmbeddedInterpreter_embedDoublePtr"      )
       ! get iso_c_binding types
       import
       implicit none
@@ -120,7 +133,8 @@ module EmbeddedInterpreter
       ! return void
     end subroutine EmbeddedInterpreter_embedDoublePtr
 
-    subroutine EmbeddedInterpreter_embedFloatPtr     ( eiPtr, pymodule, attr, ptr, numDims, dimSize ) bind( c, name="EmbeddedInterpreter_embedFloatPtr"      )
+    subroutine EmbeddedInterpreter_embedFloatPtr     ( eiPtr, pymodule, attr, ptr, numDims, dimSize ) &
+      bind( c, name="EmbeddedInterpreter_embedFloatPtr"      )
       ! get iso_c_binding types
       import
       implicit none
@@ -133,7 +147,8 @@ module EmbeddedInterpreter
       ! return void
     end subroutine EmbeddedInterpreter_embedFloatPtr
 
-    subroutine EmbeddedInterpreter_embedFloatValueCase     ( eiPtr, pymodule, attr, attrCase, func ) bind( c, name="EmbeddedInterpreter_embedFloatValueCase"      )
+    subroutine EmbeddedInterpreter_embedFloatValueCase     ( eiPtr, pymodule, attr, attrCase, func ) &
+      bind( c, name="EmbeddedInterpreter_embedFloatValueCase"      )
       ! get iso_c_binding types
       import
       implicit none
@@ -145,7 +160,8 @@ module EmbeddedInterpreter
       ! return void
     end subroutine EmbeddedInterpreter_embedFloatValueCase
 
-    subroutine EmbeddedInterpreter_embedInt32ValueCase     ( eiPtr, pymodule, attr, attrCase, func ) bind( c, name="EmbeddedInterpreter_embedInt32ValueCase"      )
+    subroutine EmbeddedInterpreter_embedInt32ValueCase     ( eiPtr, pymodule, attr, attrCase, func ) &
+      bind( c, name="EmbeddedInterpreter_embedInt32ValueCase"      )
       ! get iso_c_binding types
       import
       implicit none
@@ -157,7 +173,8 @@ module EmbeddedInterpreter
       ! return void
     end subroutine EmbeddedInterpreter_embedInt32ValueCase
 
-    subroutine EmbeddedInterpreter_embedFloatValue     ( eiPtr, pymodule, attr, func ) bind( c, name="EmbeddedInterpreter_embedFloatValue"      )
+    subroutine EmbeddedInterpreter_embedFloatValue     ( eiPtr, pymodule, attr, func ) &
+      bind( c, name="EmbeddedInterpreter_embedFloatValue"      )
       ! get iso_c_binding types
       import
       implicit none
@@ -168,7 +185,8 @@ module EmbeddedInterpreter
       ! return void
     end subroutine EmbeddedInterpreter_embedFloatValue
 
-    subroutine EmbeddedInterpreter_embedInt32Value     ( eiPtr, pymodule, attr, func ) bind( c, name="EmbeddedInterpreter_embedInt32Value"      )
+    subroutine EmbeddedInterpreter_embedInt32Value     ( eiPtr, pymodule, attr, func ) &
+      bind( c, name="EmbeddedInterpreter_embedInt32Value"      )
       ! get iso_c_binding types
       import
       implicit none
