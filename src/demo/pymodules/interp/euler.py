@@ -10,12 +10,16 @@ def initialize( ) :
   filename = os.path.splitext(os.path.basename(__file__))[0]
   print( logstr.format( file=filename, func=initialize.__name__ ) )
 
+  print( "pint = {0}".format( runtime_data.pint() ) )
+
 def finalize( ) :
   print( logstr.format( file=filename, func=finalize.__name__ ) )
 
 def main( ) :
   print( logstr.format( file=filename, func=main.__name__ ) )
   print( "Hello Fortran!" )
+  print( "pint = {0}".format( runtime_data.pint() ) )
+
 
   arr = runtime_data.arr()
 

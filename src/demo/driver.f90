@@ -68,14 +68,17 @@ program driver
   implicit none
 
   type( c_ptr )         :: interpreter = c_null_ptr
-  real, dimension( 10 ) :: arr = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
-  integer( c_size_t ), dimension(1) :: dims = [ 10 ]
+  real( c_float ), dimension( 10 ) :: arr = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
+  integer( c_size_t ), dimension(1) :: dims = [ 10 ], pintDims = [ 1 ]
   integer( c_size_t )               :: numDims = 1
-  integer                           :: i
+  integer, target                   :: i = 0
   integer                           :: id
+  integer, pointer                  :: pint
 #include "built_in_path.inc"
 
   arr(:) = 0
+  id     = 42
+  pint => i
   
 
   call EmbeddedInterpreter_ctor( interpreter )
@@ -109,6 +112,12 @@ program driver
                                                 f_c_string( "omp_id" ), f_c_string( "omp_get_thread_num" ), &
                                                 c_funloc( getRegularInt32Value ) )
 
+  call EmbeddedInterpreter_embedInt32PtrScalar( interpreter, f_c_string( "runtime_data" ), &
+                                                f_c_string( "pint"), pint )
+
+  call EmbeddedInterpreter_embedInt32PtrScalar( interpreter, f_c_string( "runtime_data" ), &
+                                                f_c_string( "numDims"), id )
+
 
   ! Use user module
   call EmbeddedInterpreter_pymoduleLoad( interpreter,  f_c_string( "interp.euler" ) )
@@ -123,6 +132,7 @@ program driver
 #ifdef _OPENMP
     write( *, * ) "OMP ID Fortran:  ", omp_get_thread_num()
 #endif
+     write( *, * ) "[Fortran] pint :  ", pint
     
     call EmbeddedInterpreter_threadingStart( interpreter )
     call EmbeddedInterpreter_pymoduleCall( interpreter,  f_c_string( "interp.euler" ), f_c_string( "main" ) )
