@@ -219,36 +219,36 @@ extern "C"
 
 void                  EmbeddedInterpreter_ctor      ( EmbeddedInterpreter **ppObj );
 void                  EmbeddedInterpreter_dtor      ( EmbeddedInterpreter **ppObj );
-void                  EmbeddedInterpreter_initialize( EmbeddedInterpreter **ppObj );
-void                  EmbeddedInterpreter_finalize  ( EmbeddedInterpreter **ppObj );
-void                  EmbeddedInterpreter_threadingInit    ( EmbeddedInterpreter **ppObj );
-void                  EmbeddedInterpreter_threadingStart   ( EmbeddedInterpreter **ppObj );
-void                  EmbeddedInterpreter_threadingStop    ( EmbeddedInterpreter **ppObj );
-void                  EmbeddedInterpreter_threadingFinalize( EmbeddedInterpreter **ppObj );
-void                  EmbeddedInterpreter_addToScope( EmbeddedInterpreter **ppObj, char *directory );
-void                  EmbeddedInterpreter_pymoduleLoad        ( EmbeddedInterpreter **ppObj, char *pymodule );
-void                  EmbeddedInterpreter_pymoduleCall        ( EmbeddedInterpreter **ppObj, char *pymodule, char *function );
-void                  EmbeddedInterpreter_embeddedPymoduleLoad( EmbeddedInterpreter **ppObj, char *pymodule );
+void                  EmbeddedInterpreter_initialize( EmbeddedInterpreter *pObj );
+void                  EmbeddedInterpreter_finalize  ( EmbeddedInterpreter *pObj );
+void                  EmbeddedInterpreter_threadingInit    ( EmbeddedInterpreter *pObj );
+void                  EmbeddedInterpreter_threadingStart   ( EmbeddedInterpreter *pObj );
+void                  EmbeddedInterpreter_threadingStop    ( EmbeddedInterpreter *pObj );
+void                  EmbeddedInterpreter_threadingFinalize( EmbeddedInterpreter *pObj );
+void                  EmbeddedInterpreter_addToScope( EmbeddedInterpreter *pObj, char *directory );
+void                  EmbeddedInterpreter_pymoduleLoad        ( EmbeddedInterpreter *pObj, char *pymodule );
+void                  EmbeddedInterpreter_pymoduleCall        ( EmbeddedInterpreter *pObj, char *pymodule, char *function );
+void                  EmbeddedInterpreter_embeddedPymoduleLoad( EmbeddedInterpreter *pObj, char *pymodule );
 
-void                  EmbeddedInterpreter_embedDoublePtr      ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, double  *ptr, size_t numDims, size_t *pDimSize );
-void                  EmbeddedInterpreter_embedFloatPtr       ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, float   *ptr, size_t numDims, size_t *pDimSize );
-void                  EmbeddedInterpreter_embedInt32Ptr       ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, int32_t *ptr, size_t numDims, size_t *pDimSize );
+void                  EmbeddedInterpreter_embedDoublePtr      ( EmbeddedInterpreter *pObj, char *pymodule, char *attr, double  *ptr, size_t numDims, size_t *pDimSize );
+void                  EmbeddedInterpreter_embedFloatPtr       ( EmbeddedInterpreter *pObj, char *pymodule, char *attr, float   *ptr, size_t numDims, size_t *pDimSize );
+void                  EmbeddedInterpreter_embedInt32Ptr       ( EmbeddedInterpreter *pObj, char *pymodule, char *attr, int32_t *ptr, size_t numDims, size_t *pDimSize );
 
-void                  EmbeddedInterpreter_embedDoublePtrScalar( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, double  *ptr );
-void                  EmbeddedInterpreter_embedFloatPtrScalar ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, float   *ptr );
-void                  EmbeddedInterpreter_embedInt32PtrScalar ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, int32_t *ptr );
+void                  EmbeddedInterpreter_embedDoublePtrScalar( EmbeddedInterpreter *pObj, char *pymodule, char *attr, double  *ptr );
+void                  EmbeddedInterpreter_embedFloatPtrScalar ( EmbeddedInterpreter *pObj, char *pymodule, char *attr, float   *ptr );
+void                  EmbeddedInterpreter_embedInt32PtrScalar ( EmbeddedInterpreter *pObj, char *pymodule, char *attr, int32_t *ptr );
 
-void                  EmbeddedInterpreter_embedDoubleValue    ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr,  double val );
-void                  EmbeddedInterpreter_embedFloatValue     ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr,   float val );
-void                  EmbeddedInterpreter_embedInt32Value     ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, int32_t val );
+void                  EmbeddedInterpreter_embedDoubleValue    ( EmbeddedInterpreter *pObj, char *pymodule, char *attr,  double val );
+void                  EmbeddedInterpreter_embedFloatValue     ( EmbeddedInterpreter *pObj, char *pymodule, char *attr,   float val );
+void                  EmbeddedInterpreter_embedInt32Value     ( EmbeddedInterpreter *pObj, char *pymodule, char *attr, int32_t val );
 
-void                  EmbeddedInterpreter_embedDoubleValueFunc( EmbeddedInterpreter **ppObj, char *pymodule, char *attr,  double(*func)(void) );
-void                  EmbeddedInterpreter_embedFloatValueFunc ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr,   float(*func)(void) );
-void                  EmbeddedInterpreter_embedInt32ValueFunc ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, int32_t(*func)(void) );
+void                  EmbeddedInterpreter_embedDoubleValueFunc( EmbeddedInterpreter *pObj, char *pymodule, char *attr,  double(*func)(void) );
+void                  EmbeddedInterpreter_embedFloatValueFunc ( EmbeddedInterpreter *pObj, char *pymodule, char *attr,   float(*func)(void) );
+void                  EmbeddedInterpreter_embedInt32ValueFunc ( EmbeddedInterpreter *pObj, char *pymodule, char *attr, int32_t(*func)(void) );
 
-void                  EmbeddedInterpreter_embedDoubleValueCase( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, char  *attrCase,  double(*func)(const char*) );
-void                  EmbeddedInterpreter_embedFloatValueCase ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, char  *attrCase,   float(*func)(const char*) );
-void                  EmbeddedInterpreter_embedInt32ValueCase ( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, char  *attrCase, int32_t(*func)(const char*) );
+void                  EmbeddedInterpreter_embedDoubleValueCase( EmbeddedInterpreter *pObj, char *pymodule, char *attr, char  *attrCase,  double(*func)(const char*) );
+void                  EmbeddedInterpreter_embedFloatValueCase ( EmbeddedInterpreter *pObj, char *pymodule, char *attr, char  *attrCase,   float(*func)(const char*) );
+void                  EmbeddedInterpreter_embedInt32ValueCase ( EmbeddedInterpreter *pObj, char *pymodule, char *attr, char  *attrCase, int32_t(*func)(const char*) );
 
 
 

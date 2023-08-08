@@ -29,7 +29,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       ! return void
     end subroutine EmbeddedInterpreter_initialize
 
@@ -38,7 +38,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       ! return void
     end subroutine EmbeddedInterpreter_finalize
 
@@ -47,7 +47,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       ! return void
     end subroutine EmbeddedInterpreter_threadingInit
 
@@ -56,7 +56,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       ! return void
     end subroutine EmbeddedInterpreter_threadingStart
 
@@ -65,7 +65,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       ! return void
     end subroutine EmbeddedInterpreter_threadingStop
 
@@ -74,7 +74,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       ! return void
     end subroutine EmbeddedInterpreter_threadingFinalize
 
@@ -83,7 +83,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       character( kind = c_char ), dimension(*), intent( in ) :: directory
       ! return void
     end subroutine EmbeddedInterpreter_addToScope
@@ -93,7 +93,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       character( kind = c_char ), dimension(*), intent( in ) :: pymodule
       ! return void
     end subroutine EmbeddedInterpreter_pymoduleLoad
@@ -103,7 +103,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       character( kind = c_char ), dimension(*), intent( in ) :: pymodule
       character( kind = c_char ), dimension(*), intent( in ) :: func
       ! return void
@@ -114,7 +114,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       character( kind = c_char ), dimension(*), intent( in ) :: pymodule
       ! return void
     end subroutine EmbeddedInterpreter_embeddedPymoduleLoad
@@ -129,7 +129,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       character( kind = c_char ), dimension(*), intent( in ) :: pymodule
       character( kind = c_char ), dimension(*), intent( in ) :: attr
       real( c_double ),    dimension(*), intent( in ) :: ptr
@@ -143,7 +143,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       character( kind = c_char ), dimension(*), intent( in ) :: pymodule
       character( kind = c_char ), dimension(*), intent( in ) :: attr
       real( c_float ),     dimension(*), intent( in ) :: ptr
@@ -157,7 +157,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       character( kind = c_char ), dimension(*), intent( in ) :: pymodule
       character( kind = c_char ), dimension(*), intent( in ) :: attr
       integer( c_int32_t ),dimension(*), intent( in ) :: ptr
@@ -176,7 +176,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       character( kind = c_char ), dimension(*), intent( in ) :: pymodule
       character( kind = c_char ), dimension(*), intent( in ) :: attr
       real( c_double ), intent( in ) :: ptr
@@ -188,7 +188,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       character( kind = c_char ), dimension(*), intent( in ) :: pymodule
       character( kind = c_char ), dimension(*), intent( in ) :: attr
       real( c_float ), intent( in ) :: ptr
@@ -200,7 +200,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       character( kind = c_char ), dimension(*), intent( in ) :: pymodule
       character( kind = c_char ), dimension(*), intent( in ) :: attr
       integer( c_int32_t ), intent( in ) :: ptr
@@ -217,7 +217,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       character( kind = c_char ), dimension(*), intent( in ) :: pymodule
       character( kind = c_char ), dimension(*), intent( in ) :: attr
       real( c_double ), intent( in ), value :: val
@@ -229,7 +229,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       character( kind = c_char ), dimension(*), intent( in ) :: pymodule
       character( kind = c_char ), dimension(*), intent( in ) :: attr
       real( c_float ), intent( in ), value :: val
@@ -241,7 +241,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       character( kind = c_char ), dimension(*), intent( in ) :: pymodule
       character( kind = c_char ), dimension(*), intent( in ) :: attr
       integer( c_int32_t ), intent( in ), value :: val
@@ -258,7 +258,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       character( kind = c_char ), dimension(*), intent( in ) :: pymodule
       character( kind = c_char ), dimension(*), intent( in ) :: attr
       type( c_funptr ), value, intent( in ) :: func
@@ -270,7 +270,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       character( kind = c_char ), dimension(*), intent( in ) :: pymodule
       character( kind = c_char ), dimension(*), intent( in ) :: attr
       type( c_funptr ), value, intent( in ) :: func
@@ -282,7 +282,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       character( kind = c_char ), dimension(*), intent( in ) :: pymodule
       character( kind = c_char ), dimension(*), intent( in ) :: attr
       type( c_funptr ), value, intent( in ) :: func
@@ -299,7 +299,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       character( kind = c_char ), dimension(*), intent( in ) :: pymodule
       character( kind = c_char ), dimension(*), intent( in ) :: attr
       character( kind = c_char ), dimension(*), intent( in ) :: attrCase
@@ -312,7 +312,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       character( kind = c_char ), dimension(*), intent( in ) :: pymodule
       character( kind = c_char ), dimension(*), intent( in ) :: attr
       character( kind = c_char ), dimension(*), intent( in ) :: attrCase
@@ -325,7 +325,7 @@ module EmbeddedInterpreter
       ! get iso_c_binding types
       import
       implicit none
-      type( c_ptr ), intent( in ) :: eiPtr
+      type( c_ptr ), value :: eiPtr
       character( kind = c_char ), dimension(*), intent( in ) :: pymodule
       character( kind = c_char ), dimension(*), intent( in ) :: attr
       character( kind = c_char ), dimension(*), intent( in ) :: attrCase

@@ -247,7 +247,7 @@ EmbeddedInterpreter_ctor( EmbeddedInterpreter **ppObj )
   std::cout << __func__ << ": " << "Returning " << static_cast< void * >( pInterp ) << std::endl;
 #endif
   
-  *ppObj = pInterp;
+  (*ppObj) = pInterp;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -268,120 +268,120 @@ EmbeddedInterpreter_dtor( EmbeddedInterpreter **ppObj )
 /// \brief C binding for initialize
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_initialize( EmbeddedInterpreter **ppObj )
+EmbeddedInterpreter_initialize( EmbeddedInterpreter *pObj )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << std::endl;
 #endif
-  (*ppObj)->initialize();
+  pObj->initialize();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief C binding for finalize
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_finalize  ( EmbeddedInterpreter **ppObj )
+EmbeddedInterpreter_finalize  ( EmbeddedInterpreter *pObj )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << std::endl;
 #endif
-  (*ppObj)->finalize();
+  pObj->finalize();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief C binding for threadingInit
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_threadingInit  ( EmbeddedInterpreter **ppObj )
+EmbeddedInterpreter_threadingInit  ( EmbeddedInterpreter *pObj )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << std::endl;
 #endif
-  (*ppObj)->threadingInit();
+  pObj->threadingInit();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief C binding for threadingStart
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_threadingStart  ( EmbeddedInterpreter **ppObj )
+EmbeddedInterpreter_threadingStart  ( EmbeddedInterpreter *pObj )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << std::endl;
 #endif
-  (*ppObj)->threadingStart();
+  pObj->threadingStart();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief C binding for threadingStop
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_threadingStop  ( EmbeddedInterpreter **ppObj )
+EmbeddedInterpreter_threadingStop  ( EmbeddedInterpreter *pObj )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << std::endl;
 #endif
-  (*ppObj)->threadingStop();
+  pObj->threadingStop();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief C binding for threadingFinalize
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_threadingFinalize  ( EmbeddedInterpreter **ppObj )
+EmbeddedInterpreter_threadingFinalize  ( EmbeddedInterpreter *pObj )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << std::endl;
 #endif
-  (*ppObj)->threadingFinalize();
+  pObj->threadingFinalize();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief C binding for addToScope
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_addToScope( EmbeddedInterpreter **ppObj, char *directory )
+EmbeddedInterpreter_addToScope( EmbeddedInterpreter *pObj, char *directory )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << std::endl;
 #endif
-  (*ppObj)->addToScope( std::string( directory ) );
+  pObj->addToScope( std::string( directory ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief C binding for pymoduleLoad
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_pymoduleLoad( EmbeddedInterpreter **ppObj, char *pymodule )
+EmbeddedInterpreter_pymoduleLoad( EmbeddedInterpreter *pObj, char *pymodule )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << std::endl;
 #endif
-  (*ppObj)->pymoduleLoad( std::string( pymodule ) );
+  pObj->pymoduleLoad( std::string( pymodule ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief C binding for pymoduleCall
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_pymoduleCall( EmbeddedInterpreter **ppObj, char *pymodule, char *function )
+EmbeddedInterpreter_pymoduleCall( EmbeddedInterpreter *pObj, char *pymodule, char *function )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << std::endl;
 #endif
-  (*ppObj)->pymoduleCall( std::string( pymodule ), std::string( function ) );
+  pObj->pymoduleCall( std::string( pymodule ), std::string( function ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief C binding for embeddedPymoduleLoad
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_embeddedPymoduleLoad( EmbeddedInterpreter **ppObj, char *pymodule )
+EmbeddedInterpreter_embeddedPymoduleLoad( EmbeddedInterpreter *pObj, char *pymodule )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << std::endl;
 #endif
-  (*ppObj)->embeddedPymoduleLoad( std::string( pymodule ) );
+  pObj->embeddedPymoduleLoad( std::string( pymodule ) );
 }
 
 
@@ -395,36 +395,36 @@ EmbeddedInterpreter_embeddedPymoduleLoad( EmbeddedInterpreter **ppObj, char *pym
 /// \brief C binding for embedDoublePtr
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_embedDoublePtr( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, double *ptr, size_t numDims, size_t *pDimSize )
+EmbeddedInterpreter_embedDoublePtr( EmbeddedInterpreter *pObj, char *pymodule, char *attr, double *ptr, size_t numDims, size_t *pDimSize )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << " embedding pointer <" << static_cast< void * >( ptr ) << ">" << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << " embedding pointer <" << static_cast< void * >( ptr ) << ">" << std::endl;
 #endif
-  (*ppObj)->embedPtr< pybind11::array::f_style >( std::string( pymodule ), std::string( attr ), ptr, numDims, pDimSize );
+  pObj->embedPtr< pybind11::array::f_style >( std::string( pymodule ), std::string( attr ), ptr, numDims, pDimSize );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief C binding for embedFloatPtr
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_embedFloatPtr( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, float *ptr, size_t numDims, size_t *pDimSize )
+EmbeddedInterpreter_embedFloatPtr( EmbeddedInterpreter *pObj, char *pymodule, char *attr, float *ptr, size_t numDims, size_t *pDimSize )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << " embedding pointer <" << static_cast< void * >( ptr ) << ">" << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << " embedding pointer <" << static_cast< void * >( ptr ) << ">" << std::endl;
 #endif
-  (*ppObj)->embedPtr< pybind11::array::f_style >( std::string( pymodule ), std::string( attr ), ptr, numDims, pDimSize );
+  pObj->embedPtr< pybind11::array::f_style >( std::string( pymodule ), std::string( attr ), ptr, numDims, pDimSize );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief C binding for embedInt32Ptr
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_embedInt32Ptr( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, int32_t *ptr, size_t numDims, size_t *pDimSize )
+EmbeddedInterpreter_embedInt32Ptr( EmbeddedInterpreter *pObj, char *pymodule, char *attr, int32_t *ptr, size_t numDims, size_t *pDimSize )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << " embedding pointer <" << static_cast< void * >( ptr ) << ">" << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << " embedding pointer <" << static_cast< void * >( ptr ) << ">" << std::endl;
 #endif
-  (*ppObj)->embedPtr< pybind11::array::f_style >( std::string( pymodule ), std::string( attr ), ptr, numDims, pDimSize );
+  pObj->embedPtr< pybind11::array::f_style >( std::string( pymodule ), std::string( attr ), ptr, numDims, pDimSize );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -437,48 +437,48 @@ EmbeddedInterpreter_embedInt32Ptr( EmbeddedInterpreter **ppObj, char *pymodule, 
 /// \brief C binding for embedDoublePtrScalar
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_embedDoublePtrScalar( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, double *ptr )
+EmbeddedInterpreter_embedDoublePtrScalar( EmbeddedInterpreter *pObj, char *pymodule, char *attr, double *ptr )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << " embedding pointer <" << static_cast< void * >( ptr ) << ">" << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << " embedding pointer <" << static_cast< void * >( ptr ) << ">" << std::endl;
 #endif
   // Quickly make some stand-in args
   size_t numDims  = 1;
   size_t pDimSize[1] = { 1 };
 
-  (*ppObj)->embedPtr< pybind11::array::f_style >( std::string( pymodule ), std::string( attr ), ptr, numDims, pDimSize );
+  pObj->embedPtr< pybind11::array::f_style >( std::string( pymodule ), std::string( attr ), ptr, numDims, pDimSize );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief C binding for embedFloatPtrScalar
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_embedFloatPtrScalar( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, float *ptr )
+EmbeddedInterpreter_embedFloatPtrScalar( EmbeddedInterpreter *pObj, char *pymodule, char *attr, float *ptr )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << " embedding pointer <" << static_cast< void * >( ptr ) << ">" << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << " embedding pointer <" << static_cast< void * >( ptr ) << ">" << std::endl;
 #endif
   // Quickly make some stand-in args
   size_t numDims  = 1;
   size_t pDimSize[1] = { 1 };
 
-  (*ppObj)->embedPtr< pybind11::array::f_style >( std::string( pymodule ), std::string( attr ), ptr, numDims, pDimSize );
+  pObj->embedPtr< pybind11::array::f_style >( std::string( pymodule ), std::string( attr ), ptr, numDims, pDimSize );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief C binding for embedInt32PtrScalar
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_embedInt32PtrScalar( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, int32_t *ptr )
+EmbeddedInterpreter_embedInt32PtrScalar( EmbeddedInterpreter *pObj, char *pymodule, char *attr, int32_t *ptr )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << " embedding pointer <" << static_cast< void * >( ptr ) << ">" << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << " embedding pointer <" << static_cast< void * >( ptr ) << ">" << std::endl;
 #endif
   // Quickly make some stand-in args
   size_t numDims  = 1;
   size_t pDimSize[1] = { 1 };
 
-  (*ppObj)->embedPtr< pybind11::array::f_style >( std::string( pymodule ), std::string( attr ), ptr, numDims, pDimSize );
+  pObj->embedPtr< pybind11::array::f_style >( std::string( pymodule ), std::string( attr ), ptr, numDims, pDimSize );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -491,36 +491,36 @@ EmbeddedInterpreter_embedInt32PtrScalar( EmbeddedInterpreter **ppObj, char *pymo
 /// \brief C binding for embedDoubleValue
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_embedDoubleValue( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, double val )
+EmbeddedInterpreter_embedDoubleValue( EmbeddedInterpreter *pObj, char *pymodule, char *attr, double val )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << std::endl;
 #endif
-  (*ppObj)->embedValue( std::string( pymodule ), std::string( attr ), val );
+  pObj->embedValue( std::string( pymodule ), std::string( attr ), val );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief C binding for embedFloatValue
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_embedFloatValue( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, float val )
+EmbeddedInterpreter_embedFloatValue( EmbeddedInterpreter *pObj, char *pymodule, char *attr, float val )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << std::endl;
 #endif
-  (*ppObj)->embedValue( std::string( pymodule ), std::string( attr ), val );
+  pObj->embedValue( std::string( pymodule ), std::string( attr ), val );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief C binding for embedInt32Value
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_embedInt32Value( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, int32_t val )
+EmbeddedInterpreter_embedInt32Value( EmbeddedInterpreter *pObj, char *pymodule, char *attr, int32_t val )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << std::endl;
 #endif
-  (*ppObj)->embedValue( std::string( pymodule ), std::string( attr ), val );
+  pObj->embedValue( std::string( pymodule ), std::string( attr ), val );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -533,36 +533,36 @@ EmbeddedInterpreter_embedInt32Value( EmbeddedInterpreter **ppObj, char *pymodule
 /// \brief C binding for embedDoubleValueFunc
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_embedDoubleValueFunc( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, double(*func)(void) )
+EmbeddedInterpreter_embedDoubleValueFunc( EmbeddedInterpreter *pObj, char *pymodule, char *attr, double(*func)(void) )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << std::endl;
 #endif
-  (*ppObj)->embedValueFunc( std::string( pymodule ), std::string( attr ), func );
+  pObj->embedValueFunc( std::string( pymodule ), std::string( attr ), func );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief C binding for embedFloatValueFunc
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_embedFloatValueFunc( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, float(*func)(void) )
+EmbeddedInterpreter_embedFloatValueFunc( EmbeddedInterpreter *pObj, char *pymodule, char *attr, float(*func)(void) )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << std::endl;
 #endif
-  (*ppObj)->embedValueFunc( std::string( pymodule ), std::string( attr ), func );
+  pObj->embedValueFunc( std::string( pymodule ), std::string( attr ), func );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief C binding for embedInt32ValueFunc
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_embedInt32ValueFunc( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, int32_t(*func)(void) )
+EmbeddedInterpreter_embedInt32ValueFunc( EmbeddedInterpreter *pObj, char *pymodule, char *attr, int32_t(*func)(void) )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << std::endl;
 #endif
-  (*ppObj)->embedValueFunc( std::string( pymodule ), std::string( attr ), func );
+  pObj->embedValueFunc( std::string( pymodule ), std::string( attr ), func );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -575,35 +575,35 @@ EmbeddedInterpreter_embedInt32ValueFunc( EmbeddedInterpreter **ppObj, char *pymo
 /// \brief C binding for embedDoubleValueCase
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_embedDoubleValueCase( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, char *attrCase, double(*func)(const char*) )
+EmbeddedInterpreter_embedDoubleValueCase( EmbeddedInterpreter *pObj, char *pymodule, char *attr, char *attrCase, double(*func)(const char*) )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << std::endl;
 #endif
-  (*ppObj)->embedValueCase( std::string( pymodule ), std::string( attr ), std::string( attrCase ), func );
+  pObj->embedValueCase( std::string( pymodule ), std::string( attr ), std::string( attrCase ), func );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief C binding for embedFloatValueCase
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_embedFloatValueCase( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, char *attrCase, float(*func)(const char*) )
+EmbeddedInterpreter_embedFloatValueCase( EmbeddedInterpreter *pObj, char *pymodule, char *attr, char *attrCase, float(*func)(const char*) )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << std::endl;
 #endif
-  (*ppObj)->embedValueCase( std::string( pymodule ), std::string( attr ), std::string( attrCase ), func );
+  pObj->embedValueCase( std::string( pymodule ), std::string( attr ), std::string( attrCase ), func );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief C binding for embedInt32ValueCase
 ////////////////////////////////////////////////////////////////////////////////
 void
-EmbeddedInterpreter_embedInt32ValueCase( EmbeddedInterpreter **ppObj, char *pymodule, char *attr, char *attrCase, int32_t(*func)(const char*) )
+EmbeddedInterpreter_embedInt32ValueCase( EmbeddedInterpreter *pObj, char *pymodule, char *attr, char *attrCase, int32_t(*func)(const char*) )
 {
 #ifndef NDEBUG
-  std::cout << __func__ << ": " <<  static_cast< void * >( *ppObj ) << std::endl;
+  std::cout << __func__ << ": " <<  static_cast< void * >( pObj ) << std::endl;
 #endif
-  (*ppObj)->embedValueCase( std::string( pymodule ), std::string( attr ), std::string( attrCase ), func );
+  pObj->embedValueCase( std::string( pymodule ), std::string( attr ), std::string( attrCase ), func );
 }
 
