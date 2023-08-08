@@ -19,7 +19,7 @@ set( PROJECT_VERSION ${PYIO_VERSION} )
 message( STATUS "Setting project version to ${PROJECT_VERSION}" )
 
 if ( NOT DEFINED PYBIND11_DIR )
-  set( PYBIND11_DIR ${PROJECT_SOURCE_DIR}/../pybind11/ )
+  set( PYBIND11_DIR ${PROJECT_SOURCE_DIR}/../pybind11/include/ )
 endif()
 
 include( CMakePackageConfigHelpers )
@@ -58,13 +58,13 @@ target_include_directories( ${PROJECT_NAME}
                               $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/pyio>
                               $<INSTALL_INTERFACE:include/>
                             PRIVATE
-                              ${PYBIND11_DIR}/include
+                              ${PYBIND11_DIR}
                             )
 
 target_include_directories(
                             ${PROJECT_NAME}_demo
                             PRIVATE
-                              ${PYBIND11_DIR}/include
+                              ${PYBIND11_DIR}
                             )
 
 set_target_properties(
